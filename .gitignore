@@ -1,0 +1,11 @@
+bin/
+obj/
+dist/
+client_secret.json
+token_store/
+state.json
+state.json.tmp
+errored/
+appsettings.json
+.idea/
+.DS_Store

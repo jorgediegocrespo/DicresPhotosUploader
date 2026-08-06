@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GooglePhotosUploader.UI.ViewModels"
+             x:Class="GooglePhotosUploader.UI.Views.DashboardView"
+             x:DataType="vm:DashboardViewModel">
+  <Grid Margin="16" ColumnDefinitions="2*,3*" RowDefinitions="Auto,*">
+    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Spacing="4" Margin="0,0,0,12">
+      <TextBlock Text="{Binding LastRunSummary}" TextWrapping="Wrap" />
+      <TextBlock Text="{Binding UploadedFilesTotal, StringFormat='Historical total uploaded: {0}'}" />
+      <Button Content="Run now" Command="{Binding RunNowCommand}" IsEnabled="{Binding !IsRunning}" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1" Grid.Column="0" Spacing="6" Margin="0,0,12,0">
+      <TextBlock Text="Progress by album" FontWeight="Bold" />
+      <ScrollViewer>
+        <ItemsControl ItemsSource="{Binding Albums}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:AlbumProgress">
+              <StackPanel Margin="0,0,0,8">
+                <TextBlock Text="{Binding Name}" />
+                <ProgressBar Minimum="0" Maximum="{Binding TotalCount}" Value="{Binding UploadedCount}" Height="10" />
+                <TextBlock FontSize="11" Foreground="Gray">
+                  <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} / {1} uploaded">
+                      <Binding Path="UploadedCount" />
+                      <Binding Path="TotalCount" />
+                    </MultiBinding>
+                  </TextBlock.Text>
+                </TextBlock>
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </StackPanel>
+
+    <StackPanel Grid.Row="1" Grid.Column="1" Spacing="6">
+      <TextBlock Text="Run log" FontWeight="Bold" />
+      <ListBox ItemsSource="{Binding LogLines}" />
+    </StackPanel>
+  </Grid>
+</UserControl>

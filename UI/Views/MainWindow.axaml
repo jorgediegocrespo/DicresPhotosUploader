@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GooglePhotosUploader.UI.ViewModels"
+        xmlns:views="using:GooglePhotosUploader.UI.Views"
+        x:Class="GooglePhotosUploader.UI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Google Photos Uploader"
+        Width="900" Height="650">
+  <TabControl>
+    <TabItem Header="Dashboard">
+      <views:DashboardView DataContext="{Binding Dashboard}" />
+    </TabItem>
+    <TabItem Header="Configuration">
+      <views:ConfigView DataContext="{Binding Config}" />
+    </TabItem>
+    <TabItem Header="Schedule">
+      <views:ScheduleView DataContext="{Binding Schedule}" />
+    </TabItem>
+    <TabItem Header="History">
+      <views:HistoryView DataContext="{Binding History}" />
+    </TabItem>
+  </TabControl>
+</Window>
