@@ -12,6 +12,10 @@ will run as soon as it turns back on/you log in.
 It saves progress in `state.json` and **resumes exactly where it left off**
 on each run, without re-uploading anything already uploaded.
 
+> Looking to modify the code, add features, or fix a bug? See
+> [ARCHITECTURE.md](ARCHITECTURE.md) for a full explanation of the project
+> structure, entry point, and what each class does.
+
 ## 1. Requirements
 
 - **.NET 10 SDK**. Check with `dotnet --version` (it should show 10.x). If
