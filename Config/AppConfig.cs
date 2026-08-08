@@ -69,4 +69,7 @@ public class AppConfig
 
     /// <summary>UI theme preference: "System", "Light" or "Dark".</summary>
     public string ThemePreference { get; set; } = "System";
+
+    /// <summary>UI language preference: "System", "en-US" or "es-ES".</summary>
+    public string LanguagePreference { get; set; } = "System";
 }

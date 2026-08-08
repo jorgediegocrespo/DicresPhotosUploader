@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
+using GooglePhotosUploader.Localization;
 using GooglePhotosUploader.UI.ViewModels;
 
 namespace GooglePhotosUploader.UI.Views;
@@ -26,7 +27,7 @@ public partial class ConfigView : UserControl
 
         var folders = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
         {
-            Title = "Select the root folder"
+            Title = Loc.Get("Picker_SelectRootFolder")
         });
 
         if (folders.Count > 0)
@@ -50,7 +51,7 @@ public partial class ConfigView : UserControl
 
         var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
-            Title = "Select client_secret.json",
+            Title = Loc.Get("Picker_SelectClientSecret"),
             AllowMultiple = false,
             FileTypeFilter = new[] { new FilePickerFileType("JSON") { Patterns = new[] { "*.json" } } }
         });
@@ -76,7 +77,7 @@ public partial class ConfigView : UserControl
 
         var folders = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
         {
-            Title = "Select the discarded files folder"
+            Title = Loc.Get("Picker_SelectErroredFolder")
         });
 
         if (folders.Count > 0)

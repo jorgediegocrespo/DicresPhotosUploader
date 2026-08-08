@@ -1,6 +1,7 @@
 using Avalonia;
 using GooglePhotosUploader.Config;
 using GooglePhotosUploader.Google;
+using GooglePhotosUploader.Localization;
 using GooglePhotosUploader.State;
 using GooglePhotosUploader.UI.ViewModels;
 
@@ -33,6 +34,8 @@ static async Task<int> RunHeadlessAsync()
 
         var configStore = new ConfigStore();
         var config = configStore.Load();
+
+        Loc.Initialize(config.LanguagePreference);
 
         var logsDir = Path.Combine(AppConfig.AppDataFolder, "logs");
         Directory.CreateDirectory(logsDir);

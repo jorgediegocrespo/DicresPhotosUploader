@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using GooglePhotosUploader.Config;
+using GooglePhotosUploader.Localization;
 using GooglePhotosUploader.State;
 using GooglePhotosUploader.UI.ViewModels;
 using GooglePhotosUploader.UI.Views;
@@ -25,6 +26,7 @@ public partial class App : Application
             var configStore = new ConfigStore();
             var config = configStore.Load();
 
+            Loc.Initialize(config.LanguagePreference);
             ApplyTheme(config.ThemePreference);
 
             var stateStore = new StateStore(config.StateFilePath);

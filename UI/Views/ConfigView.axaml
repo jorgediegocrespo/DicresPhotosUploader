@@ -1,41 +1,45 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:GooglePhotosUploader.UI.ViewModels"
+             xmlns:loc="using:GooglePhotosUploader.Localization"
              x:Class="GooglePhotosUploader.UI.Views.ConfigView"
              x:DataType="vm:ConfigViewModel">
   <ScrollViewer Margin="16">
     <Border Classes="Card" MaxWidth="640" HorizontalAlignment="Left">
       <StackPanel Spacing="10">
-        <TextBlock Text="Root folder (each subfolder = one album)" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <TextBlock Text="{loc:Tr Config_RootFolderLabel}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
         <Grid ColumnDefinitions="*,Auto">
           <TextBox Grid.Column="0" Text="{Binding RootFolder}" />
-          <Button Grid.Column="1" Content="Choose..." Click="OnBrowseRootFolder" Margin="6,0,0,0" />
+          <Button Grid.Column="1" Content="{loc:Tr Common_Choose}" Click="OnBrowseRootFolder" Margin="6,0,0,0" />
         </Grid>
 
-        <TextBlock Text="client_secret.json file (Google Cloud OAuth)" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <TextBlock Text="{loc:Tr Config_ClientSecretLabel}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
         <Grid ColumnDefinitions="*,Auto">
           <TextBox Grid.Column="0" Text="{Binding ClientSecretsPath}" />
-          <Button Grid.Column="1" Content="Choose..." Click="OnBrowseClientSecret" Margin="6,0,0,0" />
+          <Button Grid.Column="1" Content="{loc:Tr Common_Choose}" Click="OnBrowseClientSecret" Margin="6,0,0,0" />
         </Grid>
 
-        <TextBlock Text="Discarded files folder (errored)" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <TextBlock Text="{loc:Tr Config_ErroredFolderLabel}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
         <Grid ColumnDefinitions="*,Auto">
           <TextBox Grid.Column="0" Text="{Binding ErroredFolderPath}" />
-          <Button Grid.Column="1" Content="Choose..." Click="OnBrowseErroredFolder" Margin="6,0,0,0" />
+          <Button Grid.Column="1" Content="{loc:Tr Common_Choose}" Click="OnBrowseErroredFolder" Margin="6,0,0,0" />
         </Grid>
 
-        <TextBlock Text="Batch size (BatchSize, max. 50)" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <TextBlock Text="{loc:Tr Config_BatchSizeLabel}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
         <NumericUpDown Value="{Binding BatchSize}" Minimum="1" Maximum="50" HorizontalAlignment="Left" />
 
-        <TextBlock Text="Allowed extensions (comma-separated)" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <TextBlock Text="{loc:Tr Config_AllowedExtensionsLabel}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
         <TextBox Text="{Binding AllowedExtensionsText}" />
 
-        <TextBlock Text="Theme" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <TextBlock Text="{loc:Tr Config_ThemeLabel}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
         <ComboBox ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding SelectedTheme}" HorizontalAlignment="Left" MinWidth="160" />
 
+        <TextBlock Text="{loc:Tr Config_LanguageLabel}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <ComboBox ItemsSource="{Binding LanguageOptions}" SelectedItem="{Binding SelectedLanguage}" HorizontalAlignment="Left" MinWidth="160" />
+
         <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,10,0,0">
-          <Button Content="Save" Classes="Primary" Command="{Binding SaveCommand}" />
-          <Button Content="Reauthorize with Google" Classes="Secondary" Command="{Binding ReauthorizeCommand}" IsEnabled="{Binding !IsAuthorizing}" />
+          <Button Content="{loc:Tr Common_Save}" Classes="Primary" Command="{Binding SaveCommand}" />
+          <Button Content="{loc:Tr Config_ReauthorizeButton}" Classes="Secondary" Command="{Binding ReauthorizeCommand}" IsEnabled="{Binding !IsAuthorizing}" />
         </StackPanel>
 
         <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}" />

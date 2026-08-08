@@ -2,6 +2,7 @@ using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GooglePhotosUploader.Config;
+using GooglePhotosUploader.Localization;
 using GooglePhotosUploader.Scheduling;
 
 namespace GooglePhotosUploader.UI.ViewModels;
@@ -14,13 +15,13 @@ public partial class ScheduleViewModel : ObservableObject
 
     public List<DayOption> Days { get; } = new()
     {
-        new DayOption(DayOfWeek.Monday, "Monday"),
-        new DayOption(DayOfWeek.Tuesday, "Tuesday"),
-        new DayOption(DayOfWeek.Wednesday, "Wednesday"),
-        new DayOption(DayOfWeek.Thursday, "Thursday"),
-        new DayOption(DayOfWeek.Friday, "Friday"),
-        new DayOption(DayOfWeek.Saturday, "Saturday"),
-        new DayOption(DayOfWeek.Sunday, "Sunday")
+        new DayOption(DayOfWeek.Monday, Loc.Get("Day_Monday")),
+        new DayOption(DayOfWeek.Tuesday, Loc.Get("Day_Tuesday")),
+        new DayOption(DayOfWeek.Wednesday, Loc.Get("Day_Wednesday")),
+        new DayOption(DayOfWeek.Thursday, Loc.Get("Day_Thursday")),
+        new DayOption(DayOfWeek.Friday, Loc.Get("Day_Friday")),
+        new DayOption(DayOfWeek.Saturday, Loc.Get("Day_Saturday")),
+        new DayOption(DayOfWeek.Sunday, Loc.Get("Day_Sunday"))
     };
 
     [ObservableProperty]
@@ -63,13 +64,13 @@ public partial class ScheduleViewModel : ObservableObject
     {
         if (_scheduler is null)
         {
-            StatusMessage = "Scheduled execution is only available on Windows and macOS.";
+            StatusMessage = Loc.Get("Schedule_StatusOnlyWinMac");
             return;
         }
 
         if (!IsOAuthReady)
         {
-            StatusMessage = "First sign in with Google from the Configuration tab.";
+            StatusMessage = Loc.Get("Schedule_StatusNeedSignIn");
             return;
         }
 
@@ -77,7 +78,7 @@ public partial class ScheduleViewModel : ObservableObject
 
         if (BackgroundScheduleEnabled && selectedDays.Count == 0)
         {
-            StatusMessage = "Select at least one day.";
+            StatusMessage = Loc.Get("Schedule_StatusSelectDay");
             return;
         }
 
@@ -93,17 +94,17 @@ public partial class ScheduleViewModel : ObservableObject
             {
                 var executablePath = Process.GetCurrentProcess().MainModule!.FileName;
                 await _scheduler.RegisterAsync(_config.ScheduleEntries, executablePath);
-                StatusMessage = $"Schedule saved. Approximate next run: {ScheduleCalculator.GetNextOccurrence(_config.ScheduleEntries):dd/MM/yyyy HH:mm}.";
+                StatusMessage = Loc.Format("Schedule_StatusSavedNextRun", ScheduleCalculator.GetNextOccurrence(_config.ScheduleEntries)?.ToString("dd/MM/yyyy HH:mm"));
             }
             else
             {
                 await _scheduler.UnregisterAsync();
-                StatusMessage = "Background execution disabled.";
+                StatusMessage = Loc.Get("Schedule_StatusDisabled");
             }
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Error registering the schedule: {ex.Message}";
+            StatusMessage = Loc.Format("Schedule_StatusRegisterError", ex.Message);
         }
     }
 
@@ -117,7 +118,7 @@ public partial class ScheduleViewModel : ObservableObject
         var registered = await _scheduler.IsRegisteredAsync();
         if (registered && _config.ScheduleEntries.Count > 0)
         {
-            StatusMessage = $"Active. Approximate next run: {ScheduleCalculator.GetNextOccurrence(_config.ScheduleEntries):dd/MM/yyyy HH:mm}.";
+            StatusMessage = Loc.Format("Schedule_StatusActiveNextRun", ScheduleCalculator.GetNextOccurrence(_config.ScheduleEntries)?.ToString("dd/MM/yyyy HH:mm"));
         }
     }
 }

@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GooglePhotosUploader.Config;
 using GooglePhotosUploader.Google;
+using GooglePhotosUploader.Localization;
 using GooglePhotosUploader.State;
 
 namespace GooglePhotosUploader.UI.ViewModels;
@@ -22,10 +23,13 @@ public partial class DashboardViewModel : ObservableObject
     private bool _isRunning;
 
     [ObservableProperty]
-    private string _lastRunSummary = "No upload has been run yet.";
+    private string _lastRunSummary = Loc.Get("Dashboard_NoRunYet");
 
     [ObservableProperty]
     private int _uploadedFilesTotal;
+
+    [ObservableProperty]
+    private string _historicalTotalText = "";
 
     public ObservableCollection<AlbumProgress> Albums { get; } = new();
 
@@ -40,13 +44,18 @@ public partial class DashboardViewModel : ObservableObject
         RefreshAlbums();
     }
 
+    partial void OnUploadedFilesTotalChanged(int value)
+    {
+        HistoricalTotalText = Loc.Format("Dashboard_HistoricalTotal", value);
+    }
+
     [RelayCommand(CanExecute = nameof(CanRunNow))]
     private async Task RunNowAsync()
     {
         using var mutex = new Mutex(initiallyOwned: false, SingleRunMutexName);
         if (!mutex.WaitOne(TimeSpan.Zero))
         {
-            LogLines.Add("A run is already in progress (manual or scheduled). Try again in a few minutes.");
+            LogLines.Add(Loc.Get("Dashboard_RunInProgress"));
             return;
         }
 
@@ -74,8 +83,8 @@ public partial class DashboardViewModel : ObservableObject
             });
 
             LastRunSummary = summary.Success
-                ? $"Last run: {summary.UploadedThisRun} uploaded, {summary.SkippedFilesTotal} discarded (historical: {summary.UploadedFilesTotal})."
-                : $"Last run had errors: {summary.ErrorMessage}";
+                ? Loc.Format("Dashboard_LastRunSuccess", summary.UploadedThisRun, summary.SkippedFilesTotal, summary.UploadedFilesTotal)
+                : Loc.Format("Dashboard_LastRunError", summary.ErrorMessage);
 
             RefreshAlbums();
         }
@@ -94,7 +103,7 @@ public partial class DashboardViewModel : ObservableObject
         using var mutex = new Mutex(initiallyOwned: false, SingleRunMutexName);
         if (!mutex.WaitOne(TimeSpan.Zero))
         {
-            LogLines.Add("A run is already in progress (manual or scheduled). Try again in a few minutes.");
+            LogLines.Add(Loc.Get("Dashboard_RunInProgress"));
             return;
         }
 
@@ -122,8 +131,8 @@ public partial class DashboardViewModel : ObservableObject
             });
 
             LastRunSummary = summary.Success
-                ? $"Last reprocess run: {summary.UploadedThisRun} re-uploaded (historical: {summary.UploadedFilesTotal})."
-                : $"Last reprocess run had errors: {summary.ErrorMessage}";
+                ? Loc.Format("Dashboard_LastReprocessSuccess", summary.UploadedThisRun, summary.UploadedFilesTotal)
+                : Loc.Format("Dashboard_LastReprocessError", summary.ErrorMessage);
 
             RefreshAlbums();
         }

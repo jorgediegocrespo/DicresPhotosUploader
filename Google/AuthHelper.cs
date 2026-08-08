@@ -1,5 +1,6 @@
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Util.Store;
+using GooglePhotosUploader.Localization;
 
 namespace GooglePhotosUploader.Google;
 
@@ -20,9 +21,7 @@ public static class AuthHelper
     {
         if (!File.Exists(clientSecretsPath))
         {
-            throw new FileNotFoundException(
-                $"Cannot find the OAuth credentials file at '{clientSecretsPath}'. " +
-                "Download it from Google Cloud Console (see README.md).");
+            throw new FileNotFoundException(Loc.Format("Auth_MissingClientSecret", clientSecretsPath));
         }
 
         await using var stream = new FileStream(clientSecretsPath, FileMode.Open, FileAccess.Read);

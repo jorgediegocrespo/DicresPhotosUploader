@@ -2,21 +2,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:GooglePhotosUploader.UI.ViewModels"
              xmlns:state="using:GooglePhotosUploader.State"
+             xmlns:loc="using:GooglePhotosUploader.Localization"
              x:Class="GooglePhotosUploader.UI.Views.HistoryView"
              x:DataType="vm:HistoryViewModel">
   <Border Classes="Card" Margin="16">
     <DockPanel>
-      <Button DockPanel.Dock="Top" Content="Refresh" Classes="Primary" Command="{Binding RefreshCommand}" Margin="0,0,0,14" HorizontalAlignment="Left" />
+      <Button DockPanel.Dock="Top" Content="{loc:Tr History_Refresh}" Classes="Primary" Command="{Binding RefreshCommand}" Margin="0,0,0,14" HorizontalAlignment="Left" />
       <Border BorderBrush="{DynamicResource BorderColorBrush}" BorderThickness="1" CornerRadius="10" ClipToBounds="True">
         <DataGrid ItemsSource="{Binding Entries}" IsReadOnly="True" AutoGenerateColumns="False" GridLinesVisibility="Horizontal">
           <DataGrid.Columns>
-            <DataGridTextColumn Header="Started" Binding="{Binding StartedUtc}" />
-            <DataGridTextColumn Header="Origin" Binding="{Binding Origin}" />
-            <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
-            <DataGridTextColumn Header="Uploaded" Binding="{Binding UploadedThisRun}" />
-            <DataGridTextColumn Header="Discarded" Binding="{Binding SkippedFilesTotal}" />
-            <DataGridTextColumn Header="Historical" Binding="{Binding UploadedFilesTotal}" />
-            <DataGridTextColumn Header="Error" Binding="{Binding ErrorMessage}" />
+            <DataGridTextColumn Header="{loc:Tr History_ColStarted}" Binding="{Binding Started}" />
+            <DataGridTextColumn Header="{loc:Tr History_ColOrigin}" Binding="{Binding Origin}" />
+            <DataGridTextColumn Header="{loc:Tr History_ColStatus}" Binding="{Binding Status}" />
+            <DataGridTextColumn Header="{loc:Tr History_ColUploaded}" Binding="{Binding UploadedThisRun}" />
+            <DataGridTextColumn Header="{loc:Tr History_ColDiscarded}" Binding="{Binding SkippedFilesTotal}" />
+            <DataGridTextColumn Header="{loc:Tr History_ColHistorical}" Binding="{Binding UploadedFilesTotal}" />
+            <DataGridTextColumn Header="{loc:Tr History_ColError}" Binding="{Binding ErrorMessage}" />
           </DataGrid.Columns>
         </DataGrid>
       </Border>

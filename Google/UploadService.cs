@@ -1,4 +1,5 @@
 using GooglePhotosUploader.Config;
+using GooglePhotosUploader.Localization;
 using GooglePhotosUploader.State;
 
 namespace GooglePhotosUploader.Google;
@@ -27,8 +28,8 @@ public class UploadService
     {
         if (!Directory.Exists(appConfig.RootFolder))
         {
-            var message = $"The root folder '{appConfig.RootFolder}' does not exist.";
-            log.Report($"ERROR: {message}");
+            var message = Loc.Format("Upload_RootFolderMissing", appConfig.RootFolder);
+            log.Report(Loc.Format("Upload_ErrorPrefix", message));
             return new UploadRunSummary(false, 0, state.SkippedFiles.Count, state.UploadedFiles.Count, state.UsageCount, false, message);
         }
 
@@ -50,7 +51,7 @@ public class UploadService
                 .OrderBy(d => d, StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
-            log.Report($"Found {albumFolders.Count} folders (= {albumFolders.Count} potential albums).");
+            log.Report(Loc.Format("Upload_FoundFolders", albumFolders.Count));
 
             foreach (var folder in albumFolders)
             {
@@ -60,7 +61,7 @@ public class UploadService
 
                 if (!state.Albums.TryGetValue(albumName, out var albumId))
                 {
-                    log.Report($"Creating album '{albumName}'...");
+                    log.Report(Loc.Format("Upload_CreatingAlbum", albumName));
                     albumId = await client.CreateAlbumAsync(albumName);
                     CountRequest(state);
                     state.Albums[albumName] = albumId;
@@ -76,11 +77,11 @@ public class UploadService
 
                 if (files.Count == 0)
                 {
-                    log.Report($"Album '{albumName}': nothing pending.");
+                    log.Report(Loc.Format("Upload_AlbumNothingPending", albumName));
                     continue;
                 }
 
-                log.Report($"Album '{albumName}': {files.Count} pending files.");
+                log.Report(Loc.Format("Upload_AlbumPendingFiles", albumName, files.Count));
 
                 foreach (var batch in Chunk(files, appConfig.BatchSize))
                 {
@@ -122,23 +123,23 @@ public class UploadService
                             }
                             else
                             {
-                                RegisterFailure(state, filePath, result.ErrorMessage ?? "unknown failure while confirming the media item", albumName, erroredRoot, log, runFailures);
+                                RegisterFailure(state, filePath, result.ErrorMessage ?? Loc.Get("Upload_UnknownConfirmFailure"), albumName, erroredRoot, log, runFailures);
                             }
                         }
                     }
 
                     stateStore.Save(state);
-                    log.Report($"  ... {state.UploadedFiles.Count} files uploaded in total (historical). Requests today: {state.UsageCount}.");
+                    log.Report(Loc.Format("Upload_ProgressUploaded", state.UploadedFiles.Count, state.UsageCount));
                 }
             }
 
             stateStore.Save(state);
 
-            log.Report("=== Summary of this run ===");
-            log.Report($"Photos/videos uploaded in this run: {totalUploadedThisRun}");
-            log.Report($"Photos/videos discarded (copied to '{erroredRoot}'): {state.SkippedFiles.Count}");
-            log.Report($"Historical total uploaded: {state.UploadedFiles.Count}");
-            log.Report($"API requests made today: {state.UsageCount}");
+            log.Report(Loc.Get("Upload_SummaryHeader"));
+            log.Report(Loc.Format("Upload_SummaryUploaded", totalUploadedThisRun));
+            log.Report(Loc.Format("Upload_SummaryDiscarded", erroredRoot, state.SkippedFiles.Count));
+            log.Report(Loc.Format("Upload_SummaryHistorical", state.UploadedFiles.Count));
+            log.Report(Loc.Format("Upload_SummaryApiRequests", state.UsageCount));
             ReportFailuresSummary(runFailures, log);
 
             return new UploadRunSummary(true, totalUploadedThisRun, state.SkippedFiles.Count, state.UploadedFiles.Count, state.UsageCount, false, null);
@@ -146,22 +147,22 @@ public class UploadService
         catch (QuotaExceededException ex)
         {
             stateStore.Save(state);
-            log.Report($"WARNING: {ex.Message}");
-            log.Report("Progress has been saved. Relaunch the application later (or tomorrow) to continue.");
+            log.Report(Loc.Format("Upload_QuotaWarning", ex.Message));
+            log.Report(Loc.Get("Upload_QuotaResume"));
             ReportFailuresSummary(runFailures, log);
             return new UploadRunSummary(true, totalUploadedThisRun, state.SkippedFiles.Count, state.UploadedFiles.Count, state.UsageCount, true, ex.Message);
         }
         catch (OperationCanceledException)
         {
             stateStore.Save(state);
-            log.Report("Run cancelled by the user. Progress has been saved.");
+            log.Report(Loc.Get("Upload_Cancelled"));
             ReportFailuresSummary(runFailures, log);
-            return new UploadRunSummary(false, totalUploadedThisRun, state.SkippedFiles.Count, state.UploadedFiles.Count, state.UsageCount, false, "Cancelled by the user");
+            return new UploadRunSummary(false, totalUploadedThisRun, state.SkippedFiles.Count, state.UploadedFiles.Count, state.UsageCount, false, Loc.Get("Upload_CancelledMessage"));
         }
         catch (Exception ex)
         {
             stateStore.Save(state);
-            log.Report($"Unexpected ERROR: {ex}");
+            log.Report(Loc.Format("Upload_UnexpectedError", ex));
             ReportFailuresSummary(runFailures, log);
             return new UploadRunSummary(false, totalUploadedThisRun, state.SkippedFiles.Count, state.UploadedFiles.Count, state.UsageCount, false, ex.Message);
         }
@@ -185,8 +186,8 @@ public class UploadService
 
         if (!Directory.Exists(erroredRoot))
         {
-            var message = $"The errored folder '{erroredRoot}' does not exist.";
-            log.Report($"ERROR: {message}");
+            var message = Loc.Format("Upload_ErroredFolderMissing", erroredRoot);
+            log.Report(Loc.Format("Upload_ErrorPrefix", message));
             return new UploadRunSummary(false, 0, state.SkippedFiles.Count, state.UploadedFiles.Count, state.UsageCount, false, message);
         }
 
@@ -208,7 +209,7 @@ public class UploadService
                 .OrderBy(d => d, StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
-            log.Report($"Reprocessing errored files: found {albumFolders.Count} album folder(s) under '{erroredRoot}'.");
+            log.Report(Loc.Format("Upload_ReprocessFound", albumFolders.Count, erroredRoot));
 
             foreach (var folder in albumFolders)
             {
@@ -218,7 +219,7 @@ public class UploadService
 
                 if (!state.Albums.TryGetValue(albumName, out var albumId))
                 {
-                    log.Report($"Creating album '{albumName}'...");
+                    log.Report(Loc.Format("Upload_CreatingAlbum", albumName));
                     albumId = await client.CreateAlbumAsync(albumName);
                     CountRequest(state);
                     state.Albums[albumName] = albumId;
@@ -235,7 +236,7 @@ public class UploadService
                     continue;
                 }
 
-                log.Report($"Album '{albumName}': retrying {files.Count} errored file(s).");
+                log.Report(Loc.Format("Upload_ReprocessRetrying", albumName, files.Count));
 
                 foreach (var batch in Chunk(files, appConfig.BatchSize))
                 {
@@ -259,6 +260,7 @@ public class UploadService
                         {
                             RegisterReprocessFailure(state, appConfig, albumName, filePath, ex.Message, log, runFailures);
                         }
+
                     }
 
                     if (uploadedTokens.Count > 0)
@@ -277,7 +279,7 @@ public class UploadService
                             }
                             else
                             {
-                                RegisterReprocessFailure(state, appConfig, albumName, filePath, result.ErrorMessage ?? "unknown failure while confirming the media item", log, runFailures);
+                                RegisterReprocessFailure(state, appConfig, albumName, filePath, result.ErrorMessage ?? Loc.Get("Upload_UnknownConfirmFailure"), log, runFailures);
                             }
                         }
                     }
@@ -288,9 +290,9 @@ public class UploadService
 
             stateStore.Save(state);
 
-            log.Report("=== Summary of this reprocess run ===");
-            log.Report($"Photos/videos re-uploaded successfully: {succeeded.Count}");
-            log.Report($"Photos/videos still failing (kept in '{erroredRoot}'): {runFailures.Count}");
+            log.Report(Loc.Get("Upload_ReprocessSummaryHeader"));
+            log.Report(Loc.Format("Upload_ReprocessSummaryReuploaded", succeeded.Count));
+            log.Report(Loc.Format("Upload_ReprocessSummaryStillFailing", erroredRoot, runFailures.Count));
             ReportSucceededSummary(succeeded, log);
             ReportFailuresSummary(runFailures, log);
 
@@ -299,8 +301,8 @@ public class UploadService
         catch (QuotaExceededException ex)
         {
             stateStore.Save(state);
-            log.Report($"WARNING: {ex.Message}");
-            log.Report("Progress has been saved. Relaunch the application later (or tomorrow) to continue.");
+            log.Report(Loc.Format("Upload_QuotaWarning", ex.Message));
+            log.Report(Loc.Get("Upload_QuotaResume"));
             ReportSucceededSummary(succeeded, log);
             ReportFailuresSummary(runFailures, log);
             return new UploadRunSummary(true, totalUploadedThisRun, state.SkippedFiles.Count, state.UploadedFiles.Count, state.UsageCount, true, ex.Message);
@@ -308,15 +310,15 @@ public class UploadService
         catch (OperationCanceledException)
         {
             stateStore.Save(state);
-            log.Report("Reprocess run cancelled by the user. Progress has been saved.");
+            log.Report(Loc.Get("Upload_ReprocessCancelled"));
             ReportSucceededSummary(succeeded, log);
             ReportFailuresSummary(runFailures, log);
-            return new UploadRunSummary(false, totalUploadedThisRun, state.SkippedFiles.Count, state.UploadedFiles.Count, state.UsageCount, false, "Cancelled by the user");
+            return new UploadRunSummary(false, totalUploadedThisRun, state.SkippedFiles.Count, state.UploadedFiles.Count, state.UsageCount, false, Loc.Get("Upload_CancelledMessage"));
         }
         catch (Exception ex)
         {
             stateStore.Save(state);
-            log.Report($"Unexpected ERROR: {ex}");
+            log.Report(Loc.Format("Upload_UnexpectedError", ex));
             ReportSucceededSummary(succeeded, log);
             ReportFailuresSummary(runFailures, log);
             return new UploadRunSummary(false, totalUploadedThisRun, state.SkippedFiles.Count, state.UploadedFiles.Count, state.UsageCount, false, ex.Message);
@@ -346,7 +348,7 @@ public class UploadService
         var fileName = Path.GetFileName(filePath);
         runFailures.Add((albumName, fileName, reason));
 
-        log.Report($"  ✗ Discarded: {fileName} ({reason})");
+        log.Report(Loc.Format("Upload_Discarded", fileName, reason));
         CopyToErroredFolder(filePath, albumName, erroredRoot, log);
     }
 
@@ -357,10 +359,10 @@ public class UploadService
             return;
         }
 
-        log.Report($"Failed photos/videos in this run ({runFailures.Count}):");
+        log.Report(Loc.Format("Upload_FailuresHeader", runFailures.Count));
         foreach (var failure in runFailures)
         {
-            log.Report($"  - [{failure.AlbumName}] {failure.FileName}: {failure.Reason}");
+            log.Report(Loc.Format("Upload_FailureLine", failure.AlbumName, failure.FileName, failure.Reason));
         }
     }
 
@@ -378,7 +380,7 @@ public class UploadService
         state.SkippedFiles.Remove(originalPath);
         succeeded.Add((albumName, fileName));
 
-        log.Report($"  ✓ Re-uploaded successfully: {fileName}");
+        log.Report(Loc.Format("Upload_ReuploadedSuccess", fileName));
 
         try
         {
@@ -386,7 +388,7 @@ public class UploadService
         }
         catch (Exception ex)
         {
-            log.Report($"    ⚠ Could not remove '{erroredFilePath}' from the errored folder after a successful re-upload: {ex.Message}");
+            log.Report(Loc.Format("Upload_CouldNotRemoveErrored", erroredFilePath, ex.Message));
         }
     }
 
@@ -399,7 +401,7 @@ public class UploadService
         state.SkippedFiles.Add(originalPath);
         runFailures.Add((albumName, fileName, reason));
 
-        log.Report($"  ✗ Still failing, kept in the errored folder: {fileName} ({reason})");
+        log.Report(Loc.Format("Upload_StillFailing", fileName, reason));
     }
 
     private static void ReportSucceededSummary(List<(string AlbumName, string FileName)> succeeded, IProgress<string> log)
@@ -409,10 +411,10 @@ public class UploadService
             return;
         }
 
-        log.Report($"Successfully re-uploaded photos/videos ({succeeded.Count}):");
+        log.Report(Loc.Format("Upload_ReprocessSucceededHeader", succeeded.Count));
         foreach (var item in succeeded)
         {
-            log.Report($"  - [{item.AlbumName}] {item.FileName}");
+            log.Report(Loc.Format("Upload_SucceededLine", item.AlbumName, item.FileName));
         }
     }
 
@@ -430,11 +432,11 @@ public class UploadService
             var destPath = Path.Combine(destDir, Path.GetFileName(filePath));
             File.Copy(filePath, destPath, overwrite: true);
 
-            log.Report($"    → Copy saved to '{destPath}' for manual review (the original was not touched).");
+            log.Report(Loc.Format("Upload_CopySaved", destPath));
         }
         catch (Exception ex)
         {
-            log.Report($"    ⚠ Could not copy the failed file to '{erroredRoot}': {ex.Message}");
+            log.Report(Loc.Format("Upload_CouldNotCopy", erroredRoot, ex.Message));
         }
     }
 

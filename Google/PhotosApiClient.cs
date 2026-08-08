@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Google.Apis.Auth.OAuth2;
+using GooglePhotosUploader.Localization;
 
 namespace GooglePhotosUploader.Google;
 
@@ -43,9 +44,7 @@ public class PhotosApiClient
     {
         if (response.StatusCode == (HttpStatusCode)429)
         {
-            throw new QuotaExceededException(
-                $"Google returned 429 (quota exhausted) while trying to {context}. " +
-                "Stop the application and relaunch it later or tomorrow.");
+            throw new QuotaExceededException(Loc.Format("Quota_ExceededMessage", context));
         }
     }
 
@@ -58,7 +57,7 @@ public class PhotosApiClient
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
         using var response = await _http.PostAsync($"{BaseUrl}/albums", content);
 
-        ThrowIfQuota(response, $"create the album '{title}'");
+        ThrowIfQuota(response, Loc.Format("Quota_ContextCreateAlbum", title));
         response.EnsureSuccessStatusCode();
 
         var json = await response.Content.ReadAsStringAsync();
@@ -86,7 +85,7 @@ public class PhotosApiClient
 
         using var response = await _http.PostAsync($"{BaseUrl}/uploads", content);
 
-        ThrowIfQuota(response, $"upload the file '{fileName}'");
+        ThrowIfQuota(response, Loc.Format("Quota_ContextUploadFile", fileName));
         response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadAsStringAsync();
@@ -116,7 +115,7 @@ public class PhotosApiClient
         using var content = new StringContent(json, Encoding.UTF8, "application/json");
         using var response = await _http.PostAsync($"{BaseUrl}/mediaItems:batchCreate", content);
 
-        ThrowIfQuota(response, "confirm a batch of uploaded photos");
+        ThrowIfQuota(response, Loc.Get("Quota_ContextConfirmBatch"));
         response.EnsureSuccessStatusCode();
 
         var responseJson = await response.Content.ReadAsStringAsync();
@@ -145,7 +144,7 @@ public class PhotosApiClient
                 {
                     FileName = fileName,
                     Success = false,
-                    ErrorMessage = result?.Status?.Message ?? "Empty or unexpected response from the API"
+                    ErrorMessage = result?.Status?.Message ?? Loc.Get("Upload_EmptyApiResponse")
                 });
             }
         }

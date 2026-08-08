@@ -1,12 +1,13 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:GooglePhotosUploader.UI.ViewModels"
+             xmlns:loc="using:GooglePhotosUploader.Localization"
              x:Class="GooglePhotosUploader.UI.Views.ScheduleView"
              x:DataType="vm:ScheduleViewModel">
   <ScrollViewer Margin="16">
     <Border Classes="Card" MaxWidth="640" HorizontalAlignment="Left">
       <StackPanel Spacing="12">
-        <TextBlock Text="Run days" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <TextBlock Text="{loc:Tr Schedule_RunDays}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
         <ItemsControl ItemsSource="{Binding Days}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
@@ -20,17 +21,17 @@
           </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <TextBlock Text="Time" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <TextBlock Text="{loc:Tr Schedule_Time}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
         <TimePicker SelectedTime="{Binding ScheduledTime}" HorizontalAlignment="Left" />
 
-        <CheckBox Content="Enable background execution" IsChecked="{Binding BackgroundScheduleEnabled}" />
+        <CheckBox Content="{loc:Tr Schedule_EnableBackground}" IsChecked="{Binding BackgroundScheduleEnabled}" />
 
-        <Button Content="Save schedule" Classes="Primary" Command="{Binding SaveCommand}" HorizontalAlignment="Left" />
+        <Button Content="{loc:Tr Schedule_SaveSchedule}" Classes="Primary" Command="{Binding SaveCommand}" HorizontalAlignment="Left" />
 
         <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}" />
 
         <Border Background="{DynamicResource PrimaryLightBrush}" CornerRadius="10" Padding="12,10">
-          <TextBlock Text="You must sign in with Google (Configuration tab) before enabling the schedule. The app must be installed in its final location before saving the schedule."
+          <TextBlock Text="{loc:Tr Schedule_Note}"
                      TextWrapping="Wrap" FontStyle="Italic" Foreground="{DynamicResource TextPrimaryBrush}" />
         </Border>
       </StackPanel>

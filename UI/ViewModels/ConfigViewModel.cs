@@ -2,8 +2,19 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GooglePhotosUploader.Config;
 using GooglePhotosUploader.Google;
+using GooglePhotosUploader.Localization;
 
 namespace GooglePhotosUploader.UI.ViewModels;
+
+public record ThemeOption(string Key, string DisplayName)
+{
+    public override string ToString() => DisplayName;
+}
+
+public record LanguageOption(string Key, string DisplayName)
+{
+    public override string ToString() => DisplayName;
+}
 
 public partial class ConfigViewModel : ObservableObject
 {
@@ -31,10 +42,25 @@ public partial class ConfigViewModel : ObservableObject
     [ObservableProperty]
     private bool _isAuthorizing;
 
-    public string[] ThemeOptions { get; } = { "System", "Light", "Dark" };
+    public List<ThemeOption> ThemeOptions { get; } = new()
+    {
+        new ThemeOption("System", Loc.Get("Theme_System")),
+        new ThemeOption("Light", Loc.Get("Theme_Light")),
+        new ThemeOption("Dark", Loc.Get("Theme_Dark"))
+    };
 
     [ObservableProperty]
-    private string _selectedTheme;
+    private ThemeOption _selectedTheme;
+
+    public List<LanguageOption> LanguageOptions { get; } = new()
+    {
+        new LanguageOption("System", Loc.Get("Language_System")),
+        new LanguageOption("en-US", Loc.Get("Language_English")),
+        new LanguageOption("es-ES", Loc.Get("Language_Spanish"))
+    };
+
+    [ObservableProperty]
+    private LanguageOption _selectedLanguage;
 
     public ConfigViewModel(ConfigStore configStore, AppConfig config)
     {
@@ -48,14 +74,22 @@ public partial class ConfigViewModel : ObservableObject
             : Path.GetFullPath(config.ErroredFolderPath);
         _batchSize = config.BatchSize;
         _allowedExtensionsText = string.Join(", ", config.AllowedExtensions);
-        _selectedTheme = config.ThemePreference;
+        _selectedTheme = ThemeOptions.FirstOrDefault(t => t.Key == config.ThemePreference) ?? ThemeOptions[0];
+        _selectedLanguage = LanguageOptions.FirstOrDefault(l => l.Key == config.LanguagePreference) ?? LanguageOptions[0];
     }
 
-    partial void OnSelectedThemeChanged(string value)
+    partial void OnSelectedThemeChanged(ThemeOption value)
     {
-        _config.ThemePreference = value;
-        App.ApplyTheme(value);
+        _config.ThemePreference = value.Key;
+        App.ApplyTheme(value.Key);
         _configStore.Save(_config);
+    }
+
+    partial void OnSelectedLanguageChanged(LanguageOption value)
+    {
+        _config.LanguagePreference = value.Key;
+        _configStore.Save(_config);
+        StatusMessage = Loc.Get("Config_StatusLanguageChanged");
     }
 
     [RelayCommand]
@@ -70,7 +104,7 @@ public partial class ConfigViewModel : ObservableObject
             .ToArray();
 
         _configStore.Save(_config);
-        StatusMessage = "Configuration saved.";
+        StatusMessage = Loc.Get("Config_StatusSaved");
     }
 
     [RelayCommand]
@@ -79,7 +113,7 @@ public partial class ConfigViewModel : ObservableObject
         try
         {
             IsAuthorizing = true;
-            StatusMessage = "Opening the browser to sign in with Google...";
+            StatusMessage = Loc.Get("Config_StatusAuthorizing");
 
             if (Directory.Exists(_config.TokenStorePath))
             {
@@ -87,11 +121,11 @@ public partial class ConfigViewModel : ObservableObject
             }
 
             await AuthHelper.GetCredentialAsync(_config.ClientSecretsPath, _config.TokenStorePath);
-            StatusMessage = "Google session started successfully.";
+            StatusMessage = Loc.Get("Config_StatusAuthorized");
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Error signing in: {ex.Message}";
+            StatusMessage = Loc.Format("Config_StatusAuthorizeError", ex.Message);
         }
         finally
         {
