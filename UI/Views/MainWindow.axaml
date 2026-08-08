@@ -5,6 +5,7 @@
         x:Class="GooglePhotosUploader.UI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="Google Photos Uploader"
+        Icon="avares://GooglePhotosUploader/assets/app.ico"
         Width="900" Height="650">
   <TabControl>
     <TabItem Header="Dashboard">

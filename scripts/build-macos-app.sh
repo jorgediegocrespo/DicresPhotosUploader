@@ -24,6 +24,7 @@ for RID in "${RIDS[@]}"; do
 
   cp "$OUT_DIR/$RID-publish/$APP_NAME" "$APP_DIR/Contents/MacOS/$APP_NAME"
   chmod +x "$APP_DIR/Contents/MacOS/$APP_NAME"
+  cp "assets/AppIcon.icns" "$APP_DIR/Contents/Resources/AppIcon.icns"
 
   cat > "$APP_DIR/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -36,6 +37,7 @@ for RID in "${RIDS[@]}"; do
   <key>CFBundleShortVersionString</key><string>1.0.0</string>
   <key>CFBundlePackageType</key><string>APPL</string>
   <key>CFBundleExecutable</key><string>$APP_NAME</string>
+  <key>CFBundleIconFile</key><string>AppIcon</string>
   <key>LSMinimumSystemVersion</key><string>11.0</string>
   <key>NSHighResolutionCapable</key><true/>
 </dict></plist>

@@ -10,7 +10,12 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>assets/app.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="assets/app.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- We only use Google.Apis.Auth for the OAuth2 flow (login + token refresh). -->
