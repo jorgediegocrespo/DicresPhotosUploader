@@ -8,10 +8,7 @@ public class AppState
     /// <summary>Full file path -> id of the media item already uploaded.</summary>
     public Dictionary<string, string> UploadedFiles { get; set; } = new();
 
-    /// <summary>Number of consecutive failures per file (to stop retrying after several attempts).</summary>
-    public Dictionary<string, int> FailureCounts { get; set; } = new();
-
-    /// <summary>Files permanently discarded after too many failures.</summary>
+    /// <summary>Files discarded after a failed upload (moved to the errored folder, never retried again).</summary>
     public HashSet<string> SkippedFiles { get; set; } = new();
 
     /// <summary>Date (yyyy-MM-dd, local time) of the current request counter.</summary>

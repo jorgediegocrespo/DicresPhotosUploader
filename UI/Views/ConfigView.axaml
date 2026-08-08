@@ -17,7 +17,10 @@
     </Grid>
 
     <TextBlock Text="Discarded files folder (errored)" FontWeight="Bold" />
-    <TextBox Text="{Binding ErroredFolderPath}" />
+    <Grid ColumnDefinitions="*,Auto">
+      <TextBox Grid.Column="0" Text="{Binding ErroredFolderPath}" />
+      <Button Grid.Column="1" Content="Choose..." Click="OnBrowseErroredFolder" Margin="6,0,0,0" />
+    </Grid>
 
     <TextBlock Text="Batch size (BatchSize, max. 50)" FontWeight="Bold" />
     <NumericUpDown Value="{Binding BatchSize}" Minimum="1" Maximum="50" />

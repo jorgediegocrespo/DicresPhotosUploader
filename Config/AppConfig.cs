@@ -44,7 +44,7 @@ public class AppConfig
     /// is NEVER deleted or moved from its source folder; this is just a copy
     /// so you can manually review/retry the ones that had issues.
     /// </summary>
-    public string ErroredFolderPath { get; set; } = "errored";
+    public string ErroredFolderPath { get; set; } = Path.Combine(AppDataFolder, "errored");
 
     /// <summary>
     /// Number of photos grouped in each call to mediaItems:batchCreate (max. 50 per the API).

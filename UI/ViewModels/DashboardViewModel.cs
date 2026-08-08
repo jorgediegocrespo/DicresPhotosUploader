@@ -88,7 +88,57 @@ public partial class DashboardViewModel : ObservableObject
 
     private bool CanRunNow() => !IsRunning;
 
-    partial void OnIsRunningChanged(bool value) => RunNowCommand.NotifyCanExecuteChanged();
+    [RelayCommand(CanExecute = nameof(CanRunNow))]
+    private async Task ReprocessErrorsAsync()
+    {
+        using var mutex = new Mutex(initiallyOwned: false, SingleRunMutexName);
+        if (!mutex.WaitOne(TimeSpan.Zero))
+        {
+            LogLines.Add("A run is already in progress (manual or scheduled). Try again in a few minutes.");
+            return;
+        }
+
+        try
+        {
+            IsRunning = true;
+            LogLines.Clear();
+
+            var progress = new Progress<string>(line => LogLines.Add(line));
+            var state = _stateStore.Load();
+            var startedUtc = DateTime.UtcNow;
+
+            var summary = await _uploadService.ReprocessErroredAsync(_config, _stateStore, state, progress, CancellationToken.None);
+
+            _historyStore.Append(new RunHistoryEntry
+            {
+                StartedUtc = startedUtc,
+                FinishedUtc = DateTime.UtcNow,
+                Origin = RunOrigin.Manual,
+                Status = summary.QuotaExceeded ? RunStatus.QuotaExceeded : (summary.Success ? RunStatus.Ok : RunStatus.Error),
+                UploadedThisRun = summary.UploadedThisRun,
+                UploadedFilesTotal = summary.UploadedFilesTotal,
+                SkippedFilesTotal = summary.SkippedFilesTotal,
+                ErrorMessage = summary.ErrorMessage
+            });
+
+            LastRunSummary = summary.Success
+                ? $"Last reprocess run: {summary.UploadedThisRun} re-uploaded (historical: {summary.UploadedFilesTotal})."
+                : $"Last reprocess run had errors: {summary.ErrorMessage}";
+
+            RefreshAlbums();
+        }
+        finally
+        {
+            IsRunning = false;
+            mutex.ReleaseMutex();
+        }
+    }
+
+    partial void OnIsRunningChanged(bool value)
+    {
+        RunNowCommand.NotifyCanExecuteChanged();
+        ReprocessErrorsCommand.NotifyCanExecuteChanged();
+    }
 
     private void RefreshAlbums()
     {

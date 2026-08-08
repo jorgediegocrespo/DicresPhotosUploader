@@ -175,7 +175,7 @@ duplication.
 | [`PhotosApiClient.cs`](Google/PhotosApiClient.cs) | Thin, hand-rolled HTTP client for the **Google Photos Library API** (there is no official modern typed .NET client for this API, hence raw `HttpClient` + manual JSON (de)serialization with `System.Text.Json`). Three operations: `CreateAlbumAsync`, `UploadBytesAsync` (uploads raw bytes, returns an "upload token"), `BatchCreateMediaItemsAsync` (redeems up to `BatchSize` upload tokens at once and attaches them to an album, returning per-file success/failure). Detects HTTP 429 and throws `QuotaExceededException`. |
 | [`MimeTypeHelper.cs`](Google/MimeTypeHelper.cs) | Static extension-to-MIME-type lookup table used when uploading bytes. **Add new supported file types here AND in `AppConfig.AllowedExtensions`** (see §8.1). |
 | [`QuotaExceededException.cs`](Google/QuotaExceededException.cs) | Marker exception thrown when Google returns HTTP 429 (daily quota exhausted). Caught by `UploadService` to stop gracefully and preserve progress. |
-| [`UploadService.cs`](Google/UploadService.cs) | **The core business logic.** `UploadService.RunAsync(...)` is the single entry point used by both the UI ("Run now") and the headless scheduled mode. See §5 for the full algorithm. |
+| [`UploadService.cs`](Google/UploadService.cs) | **The core business logic.** `UploadService.RunAsync(...)` is the single entry point used by both the UI ("Run now") and the headless scheduled mode (see §5). `ReprocessErroredAsync(...)` backs the UI's "Reprocess errors" button: same upload logic but rooted at the errored folder (see §5.1). |
 
 ### 4.3 `State/`
 
@@ -209,7 +209,7 @@ each tab's View binds its own `DataContext` to (see `MainWindow.axaml` in
 | File | Responsibility |
 |---|---|
 | [`MainWindowViewModel.cs`](UI/ViewModels/MainWindowViewModel.cs) | Root ViewModel. Just instantiates and exposes the 4 tab ViewModels. No logic of its own. |
-| [`DashboardViewModel.cs`](UI/ViewModels/DashboardViewModel.cs) | Backs the Dashboard tab: per-album upload progress (`Albums`), live log lines (`LogLines`), and the `RunNowCommand` that calls `UploadService.RunAsync` (same as headless mode) guarded by the `GooglePhotosUploader-SingleRun` mutex. Defines `SingleRunMutexName`, the constant shared with `Program.cs`. |
+| [`DashboardViewModel.cs`](UI/ViewModels/DashboardViewModel.cs) | Backs the Dashboard tab: per-album upload progress (`Albums`), live log lines (`LogLines`), the `RunNowCommand` that calls `UploadService.RunAsync` (same as headless mode), and the `ReprocessErrorsCommand` that calls `UploadService.ReprocessErroredAsync` — both guarded by the same `GooglePhotosUploader-SingleRun` mutex so they never overlap with each other or a scheduled run. Defines `SingleRunMutexName`, the constant shared with `Program.cs`. |
 | [`ConfigViewModel.cs`](UI/ViewModels/ConfigViewModel.cs) | Backs the Configuration tab: editable copies of the relevant `AppConfig` fields, `SaveCommand` (persists via `ConfigStore`), and `ReauthorizeAsync` (deletes the token store and re-runs the OAuth flow). |
 | [`ScheduleViewModel.cs`](UI/ViewModels/ScheduleViewModel.cs) | Backs the Schedule tab: day-of-week checkboxes (`Days`, a list of `DayOption`), time picker (`ScheduledTime`), the enable/disable switch, and `SaveAsync` which persists `ScheduleEntries` to config **and** calls `IBackgroundScheduler.RegisterAsync`/`UnregisterAsync`. |
 | [`HistoryViewModel.cs`](UI/ViewModels/HistoryViewModel.cs) | Backs the History tab: just loads and exposes `RunHistoryEntry` items from `RunHistoryStore`, newest first. |
@@ -224,7 +224,7 @@ is intentionally minimal everywhere:
 | File | Notes |
 |---|---|
 | [`MainWindow.axaml`](UI/Views/MainWindow.axaml) / `.axaml.cs` | The single top-level `Window`. Just a `TabControl` with 4 `TabItem`s, each hosting one of the other Views and binding its `DataContext` to the corresponding property on `MainWindowViewModel` (`{Binding Dashboard}`, etc.). |
-| `DashboardView.axaml` / `.axaml.cs` | "Run now" button, progress list/grid per album (`DataGrid`, from the separate `Avalonia.Controls.DataGrid` package), live scrolling log. |
+| `DashboardView.axaml` / `.axaml.cs` | "Run now" and "Reprocess errors" buttons, progress list/grid per album (`DataGrid`, from the separate `Avalonia.Controls.DataGrid` package), live scrolling log. |
 | `ConfigView.axaml` / `.axaml.cs` | Form fields bound to `ConfigViewModel`. The code-behind has the **one non-trivial piece of code-behind in the project**: `OnBrowseRootFolder`, which opens Avalonia's native folder picker (`TopLevel.GetTopLevel(this).StorageProvider.OpenFolderPickerAsync(...)`) — this has to be code-behind because it needs a reference to the actual `Window`/`TopLevel`, which a ViewModel must never depend on. |
 | `ScheduleView.axaml` / `.axaml.cs` | Day checkboxes, time picker, enable switch, save button, status text — all bound to `ScheduleViewModel`. |
 | `HistoryView.axaml` / `.axaml.cs` | Read-only `DataGrid`/list bound to `HistoryViewModel.Entries`. |
@@ -259,21 +259,46 @@ an `IProgress<string>` for logging:
         items in a batch and reject others).
       - Save state after every batch (not just every album) so progress
         survives an interruption mid-album.
-   d. **Failure handling**: `RegisterFailure` increments a per-file counter
-      in `state.FailureCounts`. After **3** consecutive failures for the
-      same file, it's added to `state.SkippedFiles` (never retried again)
-      and a **copy** (never a move — the original is never touched) is
-      placed under `<ErroredFolderPath>/<AlbumName>/<file>` for manual review.
+   d. **Failure handling**: `RegisterFailure` reacts to the **first**
+      failure for a file — there are no retries. The file is added to
+      `state.SkippedFiles` (never retried again), a **copy** (never a move —
+      the original is never touched) is placed under
+      `<ErroredFolderPath>/<AlbumName>/<file>` for manual review, and the
+      failure is recorded for the end-of-run summary (see step 6).
 5. If Google returns HTTP 429 at any point, `PhotosApiClient` throws
    `QuotaExceededException`; `RunAsync` catches it specifically, saves
    state, and returns a summary with `QuotaExceeded = true` **without**
    treating it as a hard error — the intent is "come back later/tomorrow".
 6. Any other unexpected exception is caught, logged, and turned into a
-   failed `UploadRunSummary` — the method itself never throws.
+   failed `UploadRunSummary` — the method itself never throws. Before
+   returning (on every exit path, including the happy path), if any file
+   failed during the run, a summary block listing each failed file (album,
+   file name, and reason) is written to the log via `ReportFailuresSummary`.
 
 Return value: `UploadRunSummary` (a `record`) with counts and status flags
 that both `DashboardViewModel` (UI) and `Program.RunHeadlessAsync`
 (scheduled) use to build the `RunHistoryEntry` they append to history.
+
+### 5.1 Reprocessing errored files (`UploadService.ReprocessErroredAsync`)
+
+Backs the Dashboard's "Reprocess errors" button. Same shape as `RunAsync`,
+but with the errored folder itself (`AppConfig.ErroredFolderPath`) as the
+scanning root instead of `RootFolder` — its subfolders are album names,
+matching the layout `RegisterFailure` creates. For every file found there:
+
+- **Success**: the errored copy is deleted (`File.Delete`), and the
+  *original* path (`RootFolder/<Album>/<file>`, reconstructed since the
+  errored layout mirrors it) is marked in `state.UploadedFiles` and removed
+  from `state.SkippedFiles`, so the Dashboard's per-album progress and any
+  future `RunAsync` both see it as done.
+- **Failure**: the file is simply left where it is — `RegisterReprocessFailure`
+  never copies it again (unlike `RegisterFailure`, which would otherwise try
+  to copy the file onto itself, since root == errored folder here).
+
+At the end (and on every early-return path: quota exceeded, cancelled,
+unexpected error) it logs two summary blocks via `ReportSucceededSummary`
+and `ReportFailuresSummary`: which files were re-uploaded successfully and
+which are still failing.
 
 ---
 
@@ -398,9 +423,9 @@ Two places, both required:
   `<AppData>/logs/run-<timestamp>.log`.
 - Inspect `state.json` in `AppConfig.AppDataFolder`: `Albums` (folder →
   album id), `UploadedFiles` (file path → media item id), `SkippedFiles`
-  (permanently given up on), `FailureCounts` (in-progress retry counts).
-  Deleting a file's entry from `UploadedFiles`/`SkippedFiles` (or the whole
-  `state.json`, as a last resort) makes it re-upload on the next run.
+  (discarded after a failed upload). Deleting a file's entry from
+  `UploadedFiles`/`SkippedFiles` (or the whole `state.json`, as a last
+  resort) makes it re-upload on the next run.
 - A `QuotaExceededException`/HTTP 429 stops the run cleanly and is
   reflected as `RunStatus.QuotaExceeded` in history — this is expected
   behavior when Google's daily upload quota is hit, not a bug.

@@ -38,7 +38,9 @@ public partial class ConfigViewModel : ObservableObject
 
         _rootFolder = config.RootFolder;
         _clientSecretsPath = config.ClientSecretsPath;
-        _erroredFolderPath = config.ErroredFolderPath;
+        _erroredFolderPath = string.IsNullOrWhiteSpace(config.ErroredFolderPath)
+            ? config.ErroredFolderPath
+            : Path.GetFullPath(config.ErroredFolderPath);
         _batchSize = config.BatchSize;
         _allowedExtensionsText = string.Join(", ", config.AllowedExtensions);
     }

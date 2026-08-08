@@ -60,4 +60,28 @@ public partial class ConfigView : UserControl
             vm.ClientSecretsPath = files[0].Path.LocalPath;
         }
     }
+
+    private async void OnBrowseErroredFolder(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (DataContext is not ConfigViewModel vm)
+        {
+            return;
+        }
+
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel is null)
+        {
+            return;
+        }
+
+        var folders = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+        {
+            Title = "Select the discarded files folder"
+        });
+
+        if (folders.Count > 0)
+        {
+            vm.ErroredFolderPath = folders[0].Path.LocalPath;
+        }
+    }
 }
