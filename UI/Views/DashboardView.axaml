@@ -4,42 +4,53 @@
              x:Class="GooglePhotosUploader.UI.Views.DashboardView"
              x:DataType="vm:DashboardViewModel">
   <Grid Margin="16" ColumnDefinitions="2*,3*" RowDefinitions="Auto,*">
-    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Spacing="4" Margin="0,0,0,12">
-      <TextBlock Text="{Binding LastRunSummary}" TextWrapping="Wrap" />
-      <TextBlock Text="{Binding UploadedFilesTotal, StringFormat='Historical total uploaded: {0}'}" />
-      <StackPanel Orientation="Horizontal" Spacing="8">
-        <Button Content="Run now" Command="{Binding RunNowCommand}" IsEnabled="{Binding !IsRunning}" />
-        <Button Content="Reprocess errors" Command="{Binding ReprocessErrorsCommand}" IsEnabled="{Binding !IsRunning}" />
+    <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Classes="Card" Margin="0,0,0,16">
+      <StackPanel Spacing="6">
+        <TextBlock Text="{Binding LastRunSummary}" TextWrapping="Wrap" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <TextBlock Text="{Binding UploadedFilesTotal, StringFormat='Historical total uploaded: {0}'}"
+                   Foreground="{DynamicResource TextSecondaryBrush}" />
+        <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,6,0,0">
+          <Button Content="Run now" Classes="Primary" Command="{Binding RunNowCommand}" IsEnabled="{Binding !IsRunning}" />
+          <Button Content="Reprocess errors" Classes="Secondary" Command="{Binding ReprocessErrorsCommand}" IsEnabled="{Binding !IsRunning}" />
+        </StackPanel>
       </StackPanel>
-    </StackPanel>
+    </Border>
 
-    <StackPanel Grid.Row="1" Grid.Column="0" Spacing="6" Margin="0,0,12,0">
-      <TextBlock Text="Progress by album" FontWeight="Bold" />
-      <ScrollViewer>
-        <ItemsControl ItemsSource="{Binding Albums}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate x:DataType="vm:AlbumProgress">
-              <StackPanel Margin="0,0,0,8">
-                <TextBlock Text="{Binding Name}" />
-                <ProgressBar Minimum="0" Maximum="{Binding TotalCount}" Value="{Binding UploadedCount}" Height="10" />
-                <TextBlock FontSize="11" Foreground="Gray">
-                  <TextBlock.Text>
-                    <MultiBinding StringFormat="{}{0} / {1} uploaded">
-                      <Binding Path="UploadedCount" />
-                      <Binding Path="TotalCount" />
-                    </MultiBinding>
-                  </TextBlock.Text>
-                </TextBlock>
-              </StackPanel>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </ScrollViewer>
-    </StackPanel>
+    <Border Grid.Row="1" Grid.Column="0" Classes="Card" Margin="0,0,16,0">
+      <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Text="Progress by album" FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10" />
+        <ScrollViewer>
+          <ItemsControl ItemsSource="{Binding Albums}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:AlbumProgress">
+                <Border Background="{DynamicResource BackgroundBrush}" CornerRadius="10" Padding="12,10" Margin="0,0,0,8">
+                  <StackPanel Spacing="6">
+                    <TextBlock Text="{Binding Name}" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    <ProgressBar Minimum="0" Maximum="{Binding TotalCount}" Value="{Binding UploadedCount}" Height="8" />
+                    <TextBlock FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}">
+                      <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} / {1} uploaded">
+                          <Binding Path="UploadedCount" />
+                          <Binding Path="TotalCount" />
+                        </MultiBinding>
+                      </TextBlock.Text>
+                    </TextBlock>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </DockPanel>
+    </Border>
 
-    <StackPanel Grid.Row="1" Grid.Column="1" Spacing="6">
-      <TextBlock Text="Run log" FontWeight="Bold" />
-      <ListBox ItemsSource="{Binding LogLines}" />
-    </StackPanel>
+    <Border Grid.Row="1" Grid.Column="1" Classes="Card">
+      <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Text="Run log" FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10" />
+        <ListBox ItemsSource="{Binding LogLines}" />
+      </DockPanel>
+    </Border>
   </Grid>
 </UserControl>

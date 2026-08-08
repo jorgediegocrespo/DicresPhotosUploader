@@ -6,8 +6,9 @@
         x:DataType="vm:MainWindowViewModel"
         Title="Google Photos Uploader"
         Icon="avares://GooglePhotosUploader/assets/app.ico"
-        Width="900" Height="650">
-  <TabControl>
+        Background="{DynamicResource BackgroundBrush}"
+        Width="960" Height="680">
+  <TabControl Margin="16">
     <TabItem Header="Dashboard">
       <views:DashboardView DataContext="{Binding Dashboard}" />
     </TabItem>

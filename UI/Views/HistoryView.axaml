@@ -4,18 +4,22 @@
              xmlns:state="using:GooglePhotosUploader.State"
              x:Class="GooglePhotosUploader.UI.Views.HistoryView"
              x:DataType="vm:HistoryViewModel">
-  <DockPanel Margin="16">
-    <Button DockPanel.Dock="Top" Content="Refresh" Command="{Binding RefreshCommand}" Margin="0,0,0,10" HorizontalAlignment="Left" />
-    <DataGrid ItemsSource="{Binding Entries}" IsReadOnly="True" AutoGenerateColumns="False" GridLinesVisibility="Horizontal">
-      <DataGrid.Columns>
-        <DataGridTextColumn Header="Started" Binding="{Binding StartedUtc}" />
-        <DataGridTextColumn Header="Origin" Binding="{Binding Origin}" />
-        <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
-        <DataGridTextColumn Header="Uploaded" Binding="{Binding UploadedThisRun}" />
-        <DataGridTextColumn Header="Discarded" Binding="{Binding SkippedFilesTotal}" />
-        <DataGridTextColumn Header="Historical" Binding="{Binding UploadedFilesTotal}" />
-        <DataGridTextColumn Header="Error" Binding="{Binding ErrorMessage}" />
-      </DataGrid.Columns>
-    </DataGrid>
-  </DockPanel>
+  <Border Classes="Card" Margin="16">
+    <DockPanel>
+      <Button DockPanel.Dock="Top" Content="Refresh" Classes="Primary" Command="{Binding RefreshCommand}" Margin="0,0,0,14" HorizontalAlignment="Left" />
+      <Border BorderBrush="{DynamicResource BorderColorBrush}" BorderThickness="1" CornerRadius="10" ClipToBounds="True">
+        <DataGrid ItemsSource="{Binding Entries}" IsReadOnly="True" AutoGenerateColumns="False" GridLinesVisibility="Horizontal">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Started" Binding="{Binding StartedUtc}" />
+            <DataGridTextColumn Header="Origin" Binding="{Binding Origin}" />
+            <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+            <DataGridTextColumn Header="Uploaded" Binding="{Binding UploadedThisRun}" />
+            <DataGridTextColumn Header="Discarded" Binding="{Binding SkippedFilesTotal}" />
+            <DataGridTextColumn Header="Historical" Binding="{Binding UploadedFilesTotal}" />
+            <DataGridTextColumn Header="Error" Binding="{Binding ErrorMessage}" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </Border>
+    </DockPanel>
+  </Border>
 </UserControl>

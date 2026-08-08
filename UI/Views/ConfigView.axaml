@@ -3,36 +3,40 @@
              xmlns:vm="using:GooglePhotosUploader.UI.ViewModels"
              x:Class="GooglePhotosUploader.UI.Views.ConfigView"
              x:DataType="vm:ConfigViewModel">
-  <StackPanel Margin="16" Spacing="10" MaxWidth="600">
-    <TextBlock Text="Root folder (each subfolder = one album)" FontWeight="Bold" />
-    <Grid ColumnDefinitions="*,Auto">
-      <TextBox Grid.Column="0" Text="{Binding RootFolder}" />
-      <Button Grid.Column="1" Content="Choose..." Click="OnBrowseRootFolder" Margin="6,0,0,0" />
-    </Grid>
+  <ScrollViewer Margin="16">
+    <Border Classes="Card" MaxWidth="640" HorizontalAlignment="Left">
+      <StackPanel Spacing="10">
+        <TextBlock Text="Root folder (each subfolder = one album)" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBox Grid.Column="0" Text="{Binding RootFolder}" />
+          <Button Grid.Column="1" Content="Choose..." Click="OnBrowseRootFolder" Margin="6,0,0,0" />
+        </Grid>
 
-    <TextBlock Text="client_secret.json file (Google Cloud OAuth)" FontWeight="Bold" />
-    <Grid ColumnDefinitions="*,Auto">
-      <TextBox Grid.Column="0" Text="{Binding ClientSecretsPath}" />
-      <Button Grid.Column="1" Content="Choose..." Click="OnBrowseClientSecret" Margin="6,0,0,0" />
-    </Grid>
+        <TextBlock Text="client_secret.json file (Google Cloud OAuth)" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBox Grid.Column="0" Text="{Binding ClientSecretsPath}" />
+          <Button Grid.Column="1" Content="Choose..." Click="OnBrowseClientSecret" Margin="6,0,0,0" />
+        </Grid>
 
-    <TextBlock Text="Discarded files folder (errored)" FontWeight="Bold" />
-    <Grid ColumnDefinitions="*,Auto">
-      <TextBox Grid.Column="0" Text="{Binding ErroredFolderPath}" />
-      <Button Grid.Column="1" Content="Choose..." Click="OnBrowseErroredFolder" Margin="6,0,0,0" />
-    </Grid>
+        <TextBlock Text="Discarded files folder (errored)" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBox Grid.Column="0" Text="{Binding ErroredFolderPath}" />
+          <Button Grid.Column="1" Content="Choose..." Click="OnBrowseErroredFolder" Margin="6,0,0,0" />
+        </Grid>
 
-    <TextBlock Text="Batch size (BatchSize, max. 50)" FontWeight="Bold" />
-    <NumericUpDown Value="{Binding BatchSize}" Minimum="1" Maximum="50" />
+        <TextBlock Text="Batch size (BatchSize, max. 50)" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <NumericUpDown Value="{Binding BatchSize}" Minimum="1" Maximum="50" HorizontalAlignment="Left" />
 
-    <TextBlock Text="Allowed extensions (comma-separated)" FontWeight="Bold" />
-    <TextBox Text="{Binding AllowedExtensionsText}" />
+        <TextBlock Text="Allowed extensions (comma-separated)" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+        <TextBox Text="{Binding AllowedExtensionsText}" />
 
-    <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10,0,0">
-      <Button Content="Save" Command="{Binding SaveCommand}" />
-      <Button Content="Reauthorize with Google" Command="{Binding ReauthorizeCommand}" IsEnabled="{Binding !IsAuthorizing}" />
-    </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,10,0,0">
+          <Button Content="Save" Classes="Primary" Command="{Binding SaveCommand}" />
+          <Button Content="Reauthorize with Google" Classes="Secondary" Command="{Binding ReauthorizeCommand}" IsEnabled="{Binding !IsAuthorizing}" />
+        </StackPanel>
 
-    <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Foreground="Gray" />
-  </StackPanel>
+        <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}" />
+      </StackPanel>
+    </Border>
+  </ScrollViewer>
 </UserControl>

@@ -2,8 +2,172 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GooglePhotosUploader.App"
              RequestedThemeVariant="Default">
+  <Application.Resources>
+    <ResourceDictionary>
+      <!-- Color palette -->
+      <Color x:Key="ColorPrimary">#5B6EF5</Color>
+      <Color x:Key="ColorPrimaryDark">#4756D6</Color>
+      <Color x:Key="ColorPrimaryLight">#E8EBFE</Color>
+      <Color x:Key="ColorSecondary">#14B8A6</Color>
+      <Color x:Key="ColorSecondaryDark">#0F9488</Color>
+      <Color x:Key="ColorSecondaryLight">#DCFAF6</Color>
+      <Color x:Key="ColorBackground">#F3F5FB</Color>
+      <Color x:Key="ColorSurface">#FFFFFF</Color>
+      <Color x:Key="ColorBorder">#E2E5F1</Color>
+      <Color x:Key="ColorTextPrimary">#1E2233</Color>
+      <Color x:Key="ColorTextSecondary">#6B7280</Color>
+      <Color x:Key="ColorSuccess">#22C55E</Color>
+      <Color x:Key="ColorWarning">#F59E0B</Color>
+      <Color x:Key="ColorDanger">#EF4444</Color>
+
+      <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource ColorPrimary}" />
+      <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource ColorPrimaryDark}" />
+      <SolidColorBrush x:Key="PrimaryLightBrush" Color="{StaticResource ColorPrimaryLight}" />
+      <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource ColorSecondary}" />
+      <SolidColorBrush x:Key="SecondaryDarkBrush" Color="{StaticResource ColorSecondaryDark}" />
+      <SolidColorBrush x:Key="SecondaryLightBrush" Color="{StaticResource ColorSecondaryLight}" />
+      <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource ColorBackground}" />
+      <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource ColorSurface}" />
+      <SolidColorBrush x:Key="BorderColorBrush" Color="{StaticResource ColorBorder}" />
+      <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource ColorTextPrimary}" />
+      <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource ColorTextSecondary}" />
+      <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource ColorSuccess}" />
+      <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource ColorWarning}" />
+      <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource ColorDanger}" />
+
+      <!-- Re-tint the Fluent accent so built-in controls (CheckBox, ToggleSwitch...) match the palette -->
+      <Color x:Key="SystemAccentColor">#5B6EF5</Color>
+      <Color x:Key="SystemAccentColorDark1">#4756D6</Color>
+      <Color x:Key="SystemAccentColorDark2">#3A46B0</Color>
+      <Color x:Key="SystemAccentColorDark3">#2D3689</Color>
+      <Color x:Key="SystemAccentColorLight1">#7C8CF7</Color>
+      <Color x:Key="SystemAccentColorLight2">#9EA9F9</Color>
+      <Color x:Key="SystemAccentColorLight3">#C0C8FC</Color>
+    </ResourceDictionary>
+  </Application.Resources>
+
   <Application.Styles>
     <FluentTheme />
     <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+
+    <!-- Panels / cards -->
+    <Style Selector="Border.Card">
+      <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+      <Setter Property="CornerRadius" Value="16" />
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderColorBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Padding" Value="20" />
+      <Setter Property="BoxShadow" Value="0 1 8 0 #14000000" />
+    </Style>
+
+    <!-- Tabs styled as rounded pills -->
+    <Style Selector="TabControl">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style Selector="TabItem">
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="Padding" Value="18,9" />
+      <Setter Property="Margin" Value="0,0,8,0" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+      <Setter Property="FontWeight" Value="Medium" />
+    </Style>
+    <Style Selector="TabItem:selected">
+      <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+      <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="TabItem:pointerover">
+      <Setter Property="Background" Value="{DynamicResource PrimaryLightBrush}" />
+    </Style>
+    <Style Selector="TabItem:selected:pointerover">
+      <Setter Property="Background" Value="{DynamicResource PrimaryDarkBrush}" />
+    </Style>
+
+    <!-- Buttons -->
+    <Style Selector="Button">
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="14,8" />
+      <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderColorBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+    </Style>
+    <Style Selector="Button:pointerover">
+      <Setter Property="Background" Value="{DynamicResource PrimaryLightBrush}" />
+    </Style>
+    <Style Selector="Button.Primary">
+      <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Button.Primary:pointerover">
+      <Setter Property="Background" Value="{DynamicResource PrimaryDarkBrush}" />
+    </Style>
+    <Style Selector="Button.Secondary">
+      <Setter Property="Background" Value="{DynamicResource SecondaryBrush}" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Button.Secondary:pointerover">
+      <Setter Property="Background" Value="{DynamicResource SecondaryDarkBrush}" />
+    </Style>
+
+    <!-- Inputs -->
+    <Style Selector="TextBox">
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderColorBrush}" />
+      <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+    </Style>
+    <Style Selector="NumericUpDown">
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderColorBrush}" />
+      <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+    </Style>
+    <Style Selector="ComboBox">
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderColorBrush}" />
+      <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+    </Style>
+    <Style Selector="TimePicker">
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderColorBrush}" />
+      <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+    </Style>
+
+    <!-- Lists -->
+    <Style Selector="ListBox">
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderColorBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="ListBoxItem">
+      <Setter Property="CornerRadius" Value="6" />
+    </Style>
+
+    <!-- Progress bars -->
+    <Style Selector="ProgressBar">
+      <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}" />
+      <Setter Property="Background" Value="{DynamicResource BorderColorBrush}" />
+      <Setter Property="CornerRadius" Value="5" />
+    </Style>
+
+    <!-- DataGrid -->
+    <Style Selector="DataGrid">
+      <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+      <Setter Property="RowBackground" Value="{DynamicResource SurfaceBrush}" />
+      <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource BorderColorBrush}" />
+      <Setter Property="VerticalGridLinesBrush" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="DataGridColumnHeader">
+      <Setter Property="Background" Value="{DynamicResource PrimaryLightBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Padding" Value="10,8" />
+    </Style>
   </Application.Styles>
 </Application>
