@@ -4,38 +4,75 @@
              RequestedThemeVariant="Default">
   <Application.Resources>
     <ResourceDictionary>
-      <!-- Color palette -->
-      <Color x:Key="ColorPrimary">#5B6EF5</Color>
-      <Color x:Key="ColorPrimaryDark">#4756D6</Color>
-      <Color x:Key="ColorPrimaryLight">#E8EBFE</Color>
-      <Color x:Key="ColorSecondary">#14B8A6</Color>
-      <Color x:Key="ColorSecondaryDark">#0F9488</Color>
-      <Color x:Key="ColorSecondaryLight">#DCFAF6</Color>
-      <Color x:Key="ColorBackground">#F3F5FB</Color>
-      <Color x:Key="ColorSurface">#FFFFFF</Color>
-      <Color x:Key="ColorBorder">#E2E5F1</Color>
-      <Color x:Key="ColorTextPrimary">#1E2233</Color>
-      <Color x:Key="ColorTextSecondary">#6B7280</Color>
-      <Color x:Key="ColorSuccess">#22C55E</Color>
-      <Color x:Key="ColorWarning">#F59E0B</Color>
-      <Color x:Key="ColorDanger">#EF4444</Color>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <!-- Color palette (light) -->
+          <Color x:Key="ColorPrimary">#5B6EF5</Color>
+          <Color x:Key="ColorPrimaryDark">#4756D6</Color>
+          <Color x:Key="ColorPrimaryLight">#E8EBFE</Color>
+          <Color x:Key="ColorSecondary">#14B8A6</Color>
+          <Color x:Key="ColorSecondaryDark">#0F9488</Color>
+          <Color x:Key="ColorSecondaryLight">#DCFAF6</Color>
+          <Color x:Key="ColorBackground">#F3F5FB</Color>
+          <Color x:Key="ColorSurface">#FFFFFF</Color>
+          <Color x:Key="ColorBorder">#E2E5F1</Color>
+          <Color x:Key="ColorTextPrimary">#1E2233</Color>
+          <Color x:Key="ColorTextSecondary">#6B7280</Color>
+          <Color x:Key="ColorSuccess">#22C55E</Color>
+          <Color x:Key="ColorWarning">#F59E0B</Color>
+          <Color x:Key="ColorDanger">#EF4444</Color>
 
-      <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource ColorPrimary}" />
-      <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource ColorPrimaryDark}" />
-      <SolidColorBrush x:Key="PrimaryLightBrush" Color="{StaticResource ColorPrimaryLight}" />
-      <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource ColorSecondary}" />
-      <SolidColorBrush x:Key="SecondaryDarkBrush" Color="{StaticResource ColorSecondaryDark}" />
-      <SolidColorBrush x:Key="SecondaryLightBrush" Color="{StaticResource ColorSecondaryLight}" />
-      <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource ColorBackground}" />
-      <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource ColorSurface}" />
-      <SolidColorBrush x:Key="BorderColorBrush" Color="{StaticResource ColorBorder}" />
-      <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource ColorTextPrimary}" />
-      <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource ColorTextSecondary}" />
-      <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource ColorSuccess}" />
-      <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource ColorWarning}" />
-      <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource ColorDanger}" />
+          <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource ColorPrimary}" />
+          <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource ColorPrimaryDark}" />
+          <SolidColorBrush x:Key="PrimaryLightBrush" Color="{StaticResource ColorPrimaryLight}" />
+          <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource ColorSecondary}" />
+          <SolidColorBrush x:Key="SecondaryDarkBrush" Color="{StaticResource ColorSecondaryDark}" />
+          <SolidColorBrush x:Key="SecondaryLightBrush" Color="{StaticResource ColorSecondaryLight}" />
+          <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource ColorBackground}" />
+          <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource ColorSurface}" />
+          <SolidColorBrush x:Key="BorderColorBrush" Color="{StaticResource ColorBorder}" />
+          <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource ColorTextPrimary}" />
+          <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource ColorTextSecondary}" />
+          <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource ColorSuccess}" />
+          <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource ColorWarning}" />
+          <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource ColorDanger}" />
+        </ResourceDictionary>
 
-      <!-- Re-tint the Fluent accent so built-in controls (CheckBox, ToggleSwitch...) match the palette -->
+        <ResourceDictionary x:Key="Dark">
+          <!-- Color palette (dark) -->
+          <Color x:Key="ColorPrimary">#7C8CF7</Color>
+          <Color x:Key="ColorPrimaryDark">#5B6EF5</Color>
+          <Color x:Key="ColorPrimaryLight">#2E3358</Color>
+          <Color x:Key="ColorSecondary">#2DD4BF</Color>
+          <Color x:Key="ColorSecondaryDark">#14B8A6</Color>
+          <Color x:Key="ColorSecondaryLight">#113B38</Color>
+          <Color x:Key="ColorBackground">#14161F</Color>
+          <Color x:Key="ColorSurface">#1E2130</Color>
+          <Color x:Key="ColorBorder">#30354A</Color>
+          <Color x:Key="ColorTextPrimary">#F1F2F8</Color>
+          <Color x:Key="ColorTextSecondary">#9CA3B8</Color>
+          <Color x:Key="ColorSuccess">#4ADE80</Color>
+          <Color x:Key="ColorWarning">#FBBF24</Color>
+          <Color x:Key="ColorDanger">#F87171</Color>
+
+          <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource ColorPrimary}" />
+          <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource ColorPrimaryDark}" />
+          <SolidColorBrush x:Key="PrimaryLightBrush" Color="{StaticResource ColorPrimaryLight}" />
+          <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource ColorSecondary}" />
+          <SolidColorBrush x:Key="SecondaryDarkBrush" Color="{StaticResource ColorSecondaryDark}" />
+          <SolidColorBrush x:Key="SecondaryLightBrush" Color="{StaticResource ColorSecondaryLight}" />
+          <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource ColorBackground}" />
+          <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource ColorSurface}" />
+          <SolidColorBrush x:Key="BorderColorBrush" Color="{StaticResource ColorBorder}" />
+          <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource ColorTextPrimary}" />
+          <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource ColorTextSecondary}" />
+          <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource ColorSuccess}" />
+          <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource ColorWarning}" />
+          <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource ColorDanger}" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+
+      <!-- Re-tint the Fluent accent so built-in controls (CheckBox, ToggleSwitch...) match the palette in both themes -->
       <Color x:Key="SystemAccentColor">#5B6EF5</Color>
       <Color x:Key="SystemAccentColorDark1">#4756D6</Color>
       <Color x:Key="SystemAccentColorDark2">#3A46B0</Color>

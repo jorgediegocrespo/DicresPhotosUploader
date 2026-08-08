@@ -66,4 +66,7 @@ public class AppConfig
 
     /// <summary>If true, the OS task/agent is (or should be) registered.</summary>
     public bool BackgroundScheduleEnabled { get; set; }
+
+    /// <summary>UI theme preference: "System", "Light" or "Dark".</summary>
+    public string ThemePreference { get; set; } = "System";
 }

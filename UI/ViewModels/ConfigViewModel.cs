@@ -31,6 +31,11 @@ public partial class ConfigViewModel : ObservableObject
     [ObservableProperty]
     private bool _isAuthorizing;
 
+    public string[] ThemeOptions { get; } = { "System", "Light", "Dark" };
+
+    [ObservableProperty]
+    private string _selectedTheme;
+
     public ConfigViewModel(ConfigStore configStore, AppConfig config)
     {
         _configStore = configStore;
@@ -43,6 +48,14 @@ public partial class ConfigViewModel : ObservableObject
             : Path.GetFullPath(config.ErroredFolderPath);
         _batchSize = config.BatchSize;
         _allowedExtensionsText = string.Join(", ", config.AllowedExtensions);
+        _selectedTheme = config.ThemePreference;
+    }
+
+    partial void OnSelectedThemeChanged(string value)
+    {
+        _config.ThemePreference = value;
+        App.ApplyTheme(value);
+        _configStore.Save(_config);
     }
 
     [RelayCommand]
