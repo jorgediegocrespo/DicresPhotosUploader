@@ -11,9 +11,6 @@ namespace GooglePhotosUploader.UI.ViewModels;
 
 public partial class DashboardViewModel : ObservableObject
 {
-    /// <summary>Same name used by headless mode to avoid overlapping with a scheduled run.</summary>
-    public const string SingleRunMutexName = "GooglePhotosUploader-SingleRun";
-
     private readonly AppConfig _config;
     private readonly StateStore _stateStore;
     private readonly RunHistoryStore _historyStore;
@@ -52,8 +49,8 @@ public partial class DashboardViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanRunNow))]
     private async Task RunNowAsync()
     {
-        using var mutex = new Mutex(initiallyOwned: false, SingleRunMutexName);
-        if (!mutex.WaitOne(TimeSpan.Zero))
+        using var gate = SingleRunGuard.TryAcquire();
+        if (gate is null)
         {
             LogLines.Add(Loc.Get("Dashboard_RunInProgress"));
             return;
@@ -91,7 +88,6 @@ public partial class DashboardViewModel : ObservableObject
         finally
         {
             IsRunning = false;
-            mutex.ReleaseMutex();
         }
     }
 
@@ -100,8 +96,8 @@ public partial class DashboardViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanRunNow))]
     private async Task ReprocessErrorsAsync()
     {
-        using var mutex = new Mutex(initiallyOwned: false, SingleRunMutexName);
-        if (!mutex.WaitOne(TimeSpan.Zero))
+        using var gate = SingleRunGuard.TryAcquire();
+        if (gate is null)
         {
             LogLines.Add(Loc.Get("Dashboard_RunInProgress"));
             return;
@@ -139,7 +135,6 @@ public partial class DashboardViewModel : ObservableObject
         finally
         {
             IsRunning = false;
-            mutex.ReleaseMutex();
         }
     }
 
