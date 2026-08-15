@@ -13,6 +13,9 @@ public record UploadRunSummary(
     bool QuotaExceeded,
     string? ErrorMessage);
 
+/// <summary>Reported every time a file is confirmed uploaded, so the UI can update per-album progress live.</summary>
+public record AlbumUploadProgress(string AlbumName, int UploadedDelta);
+
 /// <summary>
 /// Reusable upload logic (same as the original console app), designed to
 /// be invoked both from the UI and from a headless run scheduled by the OS.
@@ -24,7 +27,8 @@ public class UploadService
         StateStore stateStore,
         AppState state,
         IProgress<string> log,
-        CancellationToken ct)
+        CancellationToken ct,
+        IProgress<AlbumUploadProgress>? albumProgress = null)
     {
         if (!Directory.Exists(appConfig.RootFolder))
         {
@@ -120,6 +124,7 @@ public class UploadService
                             {
                                 state.UploadedFiles[filePath] = result.MediaItemId;
                                 totalUploadedThisRun++;
+                                albumProgress?.Report(new AlbumUploadProgress(albumName, 1));
                             }
                             else
                             {
@@ -180,7 +185,8 @@ public class UploadService
         StateStore stateStore,
         AppState state,
         IProgress<string> log,
-        CancellationToken ct)
+        CancellationToken ct,
+        IProgress<AlbumUploadProgress>? albumProgress = null)
     {
         var erroredRoot = Path.GetFullPath(appConfig.ErroredFolderPath);
 
@@ -276,6 +282,7 @@ public class UploadService
                             {
                                 RegisterReprocessSuccess(state, appConfig, albumName, filePath, result.MediaItemId, log, succeeded);
                                 totalUploadedThisRun++;
+                                albumProgress?.Report(new AlbumUploadProgress(albumName, 1));
                             }
                             else
                             {

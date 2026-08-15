@@ -5,7 +5,7 @@
              x:Class="GooglePhotosUploader.UI.Views.ConfigView"
              x:DataType="vm:ConfigViewModel">
   <ScrollViewer Margin="16">
-    <Border Classes="Card" MaxWidth="640" HorizontalAlignment="Left">
+    <Border Classes="Card" MaxWidth="640" HorizontalAlignment="Center">
       <StackPanel Spacing="10">
         <TextBlock Text="{loc:Tr Config_RootFolderLabel}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
         <Grid ColumnDefinitions="*,Auto">

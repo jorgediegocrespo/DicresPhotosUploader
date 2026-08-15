@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Threading;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GooglePhotosUploader.Config;
@@ -30,6 +31,11 @@ public partial class DashboardViewModel : ObservableObject
 
     public ObservableCollection<AlbumProgress> Albums { get; } = new();
 
+    public ObservableCollection<AlbumProgress> FilteredAlbums { get; } = new();
+
+    [ObservableProperty]
+    private bool _showOnlyAlbumsWithErrors;
+
     public ObservableCollection<string> LogLines { get; } = new();
 
     public DashboardViewModel(AppConfig config, StateStore stateStore, RunHistoryStore historyStore)
@@ -46,6 +52,17 @@ public partial class DashboardViewModel : ObservableObject
         HistoricalTotalText = Loc.Format("Dashboard_HistoricalTotal", value);
     }
 
+    partial void OnShowOnlyAlbumsWithErrorsChanged(bool value) => ApplyAlbumFilter();
+
+    private void ApplyAlbumFilter()
+    {
+        FilteredAlbums.Clear();
+        foreach (var album in Albums.Where(a => !ShowOnlyAlbumsWithErrors || a.HasError))
+        {
+            FilteredAlbums.Add(album);
+        }
+    }
+
     [RelayCommand(CanExecute = nameof(CanRunNow))]
     private async Task RunNowAsync()
     {
@@ -60,12 +77,13 @@ public partial class DashboardViewModel : ObservableObject
         {
             IsRunning = true;
             LogLines.Clear();
+            RefreshAlbums();
 
-            var progress = new Progress<string>(line => LogLines.Add(line));
+            var (progress, albumProgress) = CreateProgressReporters();
             var state = _stateStore.Load();
             var startedUtc = DateTime.UtcNow;
 
-            var summary = await _uploadService.RunAsync(_config, _stateStore, state, progress, CancellationToken.None);
+            var summary = await _uploadService.RunAsync(_config, _stateStore, state, progress, CancellationToken.None, albumProgress);
 
             _historyStore.Append(new RunHistoryEntry
             {
@@ -107,12 +125,13 @@ public partial class DashboardViewModel : ObservableObject
         {
             IsRunning = true;
             LogLines.Clear();
+            RefreshAlbums();
 
-            var progress = new Progress<string>(line => LogLines.Add(line));
+            var (progress, albumProgress) = CreateProgressReporters();
             var state = _stateStore.Load();
             var startedUtc = DateTime.UtcNow;
 
-            var summary = await _uploadService.ReprocessErroredAsync(_config, _stateStore, state, progress, CancellationToken.None);
+            var summary = await _uploadService.ReprocessErroredAsync(_config, _stateStore, state, progress, CancellationToken.None, albumProgress);
 
             _historyStore.Append(new RunHistoryEntry
             {
@@ -144,6 +163,31 @@ public partial class DashboardViewModel : ObservableObject
         ReprocessErrorsCommand.NotifyCanExecuteChanged();
     }
 
+    /// <summary>
+    /// Builds the log/album progress channels used by a run. Both explicitly marshal
+    /// back to the UI thread via the Avalonia dispatcher so collection/property changes
+    /// are always applied where the UI can observe them live, regardless of which
+    /// thread the upload's async continuations happen to resume on.
+    /// </summary>
+    private (IProgress<string> Log, IProgress<AlbumUploadProgress> Album) CreateProgressReporters()
+    {
+        var albumLookup = Albums.ToDictionary(a => a.Name);
+
+        var log = new Progress<string>(line =>
+            Dispatcher.UIThread.Post(() => LogLines.Add(line)));
+
+        var albumProgress = new Progress<AlbumUploadProgress>(update =>
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (albumLookup.TryGetValue(update.AlbumName, out var album))
+                {
+                    album.UploadedCount += update.UploadedDelta;
+                }
+            }));
+
+        return (log, albumProgress);
+    }
+
     private void RefreshAlbums()
     {
         Albums.Clear();
@@ -165,8 +209,11 @@ public partial class DashboardViewModel : ObservableObject
                 .ToList();
 
             var uploaded = files.Count(f => state.UploadedFiles.ContainsKey(f));
+            var hasError = files.Any(f => state.SkippedFiles.Contains(f));
 
-            Albums.Add(new AlbumProgress { Name = albumName, UploadedCount = uploaded, TotalCount = files.Count });
+            Albums.Add(new AlbumProgress { Name = albumName, UploadedCount = uploaded, TotalCount = files.Count, HasError = hasError });
         }
+
+        ApplyAlbumFilter();
     }
 }

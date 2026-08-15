@@ -191,6 +191,9 @@
       <Setter Property="Background" Value="{DynamicResource BorderColorBrush}" />
       <Setter Property="CornerRadius" Value="5" />
     </Style>
+    <Style Selector="ProgressBar.Danger">
+      <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+    </Style>
 
     <!-- DataGrid -->
     <Style Selector="DataGrid">

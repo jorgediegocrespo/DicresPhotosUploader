@@ -21,14 +21,17 @@
       <DockPanel>
         <TextBlock DockPanel.Dock="Top" Text="{loc:Tr Dashboard_ProgressByAlbum}" FontWeight="SemiBold"
                    Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10" />
+        <CheckBox DockPanel.Dock="Top" Content="{loc:Tr Dashboard_ShowOnlyErrorAlbums}"
+                  IsChecked="{Binding ShowOnlyAlbumsWithErrors}" Margin="0,0,0,10" />
         <ScrollViewer>
-          <ItemsControl ItemsSource="{Binding Albums}">
+          <ItemsControl ItemsSource="{Binding FilteredAlbums}">
             <ItemsControl.ItemTemplate>
               <DataTemplate x:DataType="vm:AlbumProgress">
                 <Border Background="{DynamicResource BackgroundBrush}" CornerRadius="10" Padding="12,10" Margin="0,0,0,8">
                   <StackPanel Spacing="6">
                     <TextBlock Text="{Binding Name}" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}" />
-                    <ProgressBar Minimum="0" Maximum="{Binding TotalCount}" Value="{Binding UploadedCount}" Height="8" />
+                    <ProgressBar Minimum="0" Maximum="{Binding TotalCount}" Value="{Binding UploadedCount}" Height="8"
+                                 Classes.Danger="{Binding HasError}" />
                     <TextBlock Text="{Binding ProgressText}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
                   </StackPanel>
                 </Border>

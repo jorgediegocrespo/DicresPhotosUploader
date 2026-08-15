@@ -5,7 +5,7 @@
              x:Class="GooglePhotosUploader.UI.Views.ScheduleView"
              x:DataType="vm:ScheduleViewModel">
   <ScrollViewer Margin="16">
-    <Border Classes="Card" MaxWidth="640" HorizontalAlignment="Left">
+    <Border Classes="Card" MaxWidth="640" HorizontalAlignment="Center">
       <StackPanel Spacing="12">
         <TextBlock Text="{loc:Tr Schedule_RunDays}" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
         <ItemsControl ItemsSource="{Binding Days}">
