@@ -5,8 +5,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-APP_NAME="GooglePhotosUploader"
-BUNDLE_ID="com.jorgediegocrespo.googlephotosuploader"
+APP_NAME="DicresPhotosUploader"
+BUNDLE_ID="com.jorgediegocrespo.dicresphotosuploader"
 OUT_DIR="dist/macos"
 RIDS=("osx-arm64" "osx-x64")
 
@@ -31,7 +31,7 @@ for RID in "${RIDS[@]}"; do
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
   <key>CFBundleName</key><string>$APP_NAME</string>
-  <key>CFBundleDisplayName</key><string>Google Photos Uploader</string>
+  <key>CFBundleDisplayName</key><string>Dicres Photos Uploader</string>
   <key>CFBundleIdentifier</key><string>$BUNDLE_ID</string>
   <key>CFBundleVersion</key><string>1.0.0</string>
   <key>CFBundleShortVersionString</key><string>1.0.0</string>

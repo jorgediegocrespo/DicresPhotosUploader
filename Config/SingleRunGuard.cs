@@ -1,4 +1,4 @@
-namespace GooglePhotosUploader.Config;
+namespace DicresPhotosUploader.Config;
 
 /// <summary>
 /// Cross-process mutual exclusion between a manual run, "Reprocess errors", and the

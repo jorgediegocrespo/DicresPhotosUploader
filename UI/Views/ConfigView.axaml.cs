@@ -1,9 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
-using GooglePhotosUploader.Localization;
-using GooglePhotosUploader.UI.ViewModels;
+using DicresPhotosUploader.Localization;
+using DicresPhotosUploader.UI.ViewModels;
 
-namespace GooglePhotosUploader.UI.Views;
+namespace DicresPhotosUploader.UI.Views;
 
 public partial class ConfigView : UserControl
 {

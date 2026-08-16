@@ -1,4 +1,4 @@
-# Google Photos Uploader
+# Dicres Photos Uploader
 
 Desktop app (Avalonia, .NET 10) for Windows and macOS that uploads all the
 photos/videos from the subfolders of a root folder to Google Photos, creating
@@ -43,8 +43,8 @@ on each run, without re-uploading anything already uploaded.
 Everything (configuration, `state.json`, history, Google token, and logs of
 scheduled runs) is saved per user in:
 
-- macOS: `~/Library/Application Support/GooglePhotosUploader/`
-- Windows: `%APPDATA%\GooglePhotosUploader\`
+- macOS: `~/Library/Application Support/DicresPhotosUploader/`
+- Windows: `%APPDATA%\DicresPhotosUploader\`
 
 No need to touch anything by hand: it's all managed from the interface itself.
 
@@ -74,9 +74,9 @@ It is not published to any store: these are standalone, self-contained
 executables (they don't require .NET to be installed on the target machine).
 
 - **Windows** (run on Windows): `./scripts/build-windows-exe.ps1` →
-  generates `dist/windows/GooglePhotosUploader.exe`.
+  generates `dist/windows/DicresPhotosUploader.exe`.
 - **macOS** (run on a Mac): `./scripts/build-macos-app.sh` → generates
-  `dist/macos/osx-arm64/GooglePhotosUploader.app` and `dist/macos/osx-x64/GooglePhotosUploader.app`.
+  `dist/macos/osx-arm64/DicresPhotosUploader.app` and `dist/macos/osx-x64/DicresPhotosUploader.app`.
   The app is not signed (there's no Apple Developer account): the first
   time, right-click → **Open** to bypass the Gatekeeper warning.
 

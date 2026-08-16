@@ -1,4 +1,4 @@
-namespace GooglePhotosUploader.State;
+namespace DicresPhotosUploader.State;
 
 public enum RunOrigin
 {

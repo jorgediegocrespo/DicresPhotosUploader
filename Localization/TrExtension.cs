@@ -1,6 +1,6 @@
 using Avalonia.Markup.Xaml;
 
-namespace GooglePhotosUploader.Localization;
+namespace DicresPhotosUploader.Localization;
 
 /// <summary>XAML markup extension that resolves a translated string at parse time: {loc:Tr SomeKey}.</summary>
 public class TrExtension : MarkupExtension

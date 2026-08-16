@@ -2,13 +2,13 @@ using System.Runtime.Versioning;
 using Microsoft.Win32.TaskScheduler;
 using Task = System.Threading.Tasks.Task;
 
-namespace GooglePhotosUploader.Scheduling;
+namespace DicresPhotosUploader.Scheduling;
 
 /// <summary>Creates/updates a task in the Windows Task Scheduler (one per time slot).</summary>
 [SupportedOSPlatform("windows")]
 public class WindowsTaskSchedulerRegistrar : IBackgroundScheduler
 {
-    private const string TaskName = "GooglePhotosUploader-Scheduled";
+    private const string TaskName = "DicresPhotosUploader-Scheduled";
 
     public Task RegisterAsync(IReadOnlyList<ScheduleEntry> entries, string executablePath)
     {

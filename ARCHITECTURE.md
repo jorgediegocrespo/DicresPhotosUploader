@@ -99,8 +99,8 @@ flowchart TD
   `MainWindow`.
 - **`--run-scheduled`**: this is how the OS scheduler invokes the app in the
   background. It calls `RunHeadlessAsync()`, which:
-  1. Takes a named `Mutex` (`GooglePhotosUploader-SingleRun`) so a scheduled
-     run never overlaps a manual run (or another scheduled run) — see §7.3.
+  1. Takes the single-run guard (a file lock, see §7.3) so a scheduled
+     run never overlaps a manual run (or another scheduled run).
   2. Loads config/state from disk (same `ConfigStore`/`StateStore` the UI
      uses).
   3. Runs the actual upload logic via `UploadService.RunAsync(...)` — the
@@ -194,7 +194,7 @@ duplication.
 | [`ScheduleCalculator.cs`](Scheduling/ScheduleCalculator.cs) | Pure function, OS-independent: given a list of `ScheduleEntry`, computes the next local `DateTime` occurrence. Used purely for **displaying** "next run" to the user — the actual triggering is done by the OS scheduler, not by this app polling a timer. |
 | [`IBackgroundScheduler.cs`](Scheduling/IBackgroundScheduler.cs) | Interface: `RegisterAsync`, `UnregisterAsync`, `IsRegisteredAsync`. Has a static factory method `IBackgroundScheduler.Create()` that returns the right implementation for the current OS (`OperatingSystem.IsWindows()` / `IsMacOS()`). This is the extension point if you ever add Linux support (see §8.3). |
 | [`WindowsTaskSchedulerRegistrar.cs`](Scheduling/WindowsTaskSchedulerRegistrar.cs) | Windows implementation, using the `TaskScheduler` NuGet package (namespace `Microsoft.Win32.TaskScheduler`). Registers one `WeeklyTrigger` per `ScheduleEntry` pointing at `<exe> --run-scheduled`, logon type `InteractiveToken` (no stored credentials needed). `[SupportedOSPlatform("windows")]`. |
-| [`MacLaunchdRegistrar.cs`](Scheduling/MacLaunchdRegistrar.cs) | macOS implementation. Writes a `launchd` user agent `.plist` to `~/Library/LaunchAgents/com.jorgediegocrespo.googlephotosuploader.plist` with one `StartCalendarInterval` dict per `ScheduleEntry`, then loads it via `launchctl bootstrap`/`bootout` (shelling out via `Process.Start`). `[SupportedOSPlatform("macos")]`. |
+| [`MacLaunchdRegistrar.cs`](Scheduling/MacLaunchdRegistrar.cs) | macOS implementation. Writes a `launchd` user agent `.plist` to `~/Library/LaunchAgents/com.jorgediegocrespo.dicresphotosuploader.plist` with one `StartCalendarInterval` dict per `ScheduleEntry`, then loads it via `launchctl bootstrap`/`bootout` (shelling out via `Process.Start`). `[SupportedOSPlatform("macos")]`. |
 
 ⚠️ Both registrars are only ever instantiated behind an `OperatingSystem.IsWindows()`/`IsMacOS()` check (see `IBackgroundScheduler.Create()` and `ScheduleViewModel`), so the wrong one is never loaded on the wrong OS.
 
@@ -339,8 +339,8 @@ sequenceDiagram
 ### 7.1 Where files live at runtime
 
 `AppConfig.AppDataFolder` = `Environment.SpecialFolder.ApplicationData` +
-`/GooglePhotosUploader` → `~/Library/Application Support/GooglePhotosUploader`
-on macOS, `%APPDATA%\GooglePhotosUploader` on Windows. **Never** assume
+`/DicresPhotosUploader` → `~/Library/Application Support/DicresPhotosUploader`
+on macOS, `%APPDATA%\DicresPhotosUploader` on Windows. **Never** assume
 config/state live next to the executable — they don't, by design (so
 multiple builds/reinstalls share state, and the repo never accidentally
 contains a real user's data).
@@ -451,10 +451,10 @@ Two places, both required:
 
 ### 8.5 Debug "scheduled run never happens"
 
-- macOS: check that `~/Library/LaunchAgents/com.jorgediegocrespo.googlephotosuploader.plist`
-  exists and `launchctl print gui/<uid>/com.jorgediegocrespo.googlephotosuploader`
+- macOS: check that `~/Library/LaunchAgents/com.jorgediegocrespo.dicresphotosuploader.plist`
+  exists and `launchctl print gui/<uid>/com.jorgediegocrespo.dicresphotosuploader`
   succeeds (`MacLaunchdRegistrar.IsRegisteredAsync`).
-- Windows: check the "GooglePhotosUploader-Scheduled" task exists in Task
+- Windows: check the "DicresPhotosUploader-Scheduled" task exists in Task
   Scheduler and its "Last Run Result".
 - Remember the schedule is tied to the **executable path** at the time
   "Save" was clicked on the Schedule tab (see `Process.GetCurrentProcess().MainModule!.FileName`
@@ -479,7 +479,7 @@ Two places, both required:
 
 - [`README.md`](README.md) — end-user setup instructions (Google Cloud
   OAuth setup, running, publishing).
-- [`GooglePhotosUploader.csproj`](GooglePhotosUploader.csproj) — target
+- [`DicresPhotosUploader.csproj`](DicresPhotosUploader.csproj) — target
   framework, all NuGet dependencies with short comments on why each is
   there.
 - [`scripts/build-macos-app.sh`](scripts/build-macos-app.sh) /

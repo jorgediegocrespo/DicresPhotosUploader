@@ -1,9 +1,9 @@
 using Avalonia;
-using GooglePhotosUploader.Config;
-using GooglePhotosUploader.Google;
-using GooglePhotosUploader.Localization;
-using GooglePhotosUploader.State;
-using GooglePhotosUploader.UI.ViewModels;
+using DicresPhotosUploader.Config;
+using DicresPhotosUploader.Google;
+using DicresPhotosUploader.Localization;
+using DicresPhotosUploader.State;
+using DicresPhotosUploader.UI.ViewModels;
 
 if (args.Contains("--run-scheduled"))
 {
@@ -14,7 +14,7 @@ BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 return 0;
 
 static AppBuilder BuildAvaloniaApp() =>
-    AppBuilder.Configure<GooglePhotosUploader.App>()
+    AppBuilder.Configure<DicresPhotosUploader.App>()
         .UsePlatformDetect()
         .WithInterFont()
         .LogToTrace();

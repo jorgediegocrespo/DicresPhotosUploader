@@ -1,4 +1,4 @@
-namespace GooglePhotosUploader.Google;
+namespace DicresPhotosUploader.Google;
 
 /// <summary>
 /// Thrown when Google responds with 429 (daily quota exhausted) or when we

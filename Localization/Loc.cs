@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace GooglePhotosUploader.Localization;
+namespace DicresPhotosUploader.Localization;
 
 public enum AppLanguage
 {

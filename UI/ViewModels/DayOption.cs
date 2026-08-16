@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace GooglePhotosUploader.UI.ViewModels;
+namespace DicresPhotosUploader.UI.ViewModels;
 
 public partial class DayOption : ObservableObject
 {

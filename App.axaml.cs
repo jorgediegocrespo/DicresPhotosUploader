@@ -2,13 +2,13 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
-using GooglePhotosUploader.Config;
-using GooglePhotosUploader.Localization;
-using GooglePhotosUploader.State;
-using GooglePhotosUploader.UI.ViewModels;
-using GooglePhotosUploader.UI.Views;
+using DicresPhotosUploader.Config;
+using DicresPhotosUploader.Localization;
+using DicresPhotosUploader.State;
+using DicresPhotosUploader.UI.ViewModels;
+using DicresPhotosUploader.UI.Views;
 
-namespace GooglePhotosUploader;
+namespace DicresPhotosUploader;
 
 public partial class App : Application
 {

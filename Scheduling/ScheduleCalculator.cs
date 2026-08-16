@@ -1,4 +1,4 @@
-namespace GooglePhotosUploader.Scheduling;
+namespace DicresPhotosUploader.Scheduling;
 
 /// <summary>Calculates the next local date/time a set of time slots should trigger.</summary>
 public static class ScheduleCalculator

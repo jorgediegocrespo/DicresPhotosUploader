@@ -4,9 +4,9 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Google.Apis.Auth.OAuth2;
-using GooglePhotosUploader.Localization;
+using DicresPhotosUploader.Localization;
 
-namespace GooglePhotosUploader.Google;
+namespace DicresPhotosUploader.Google;
 
 public class BatchItemResult
 {

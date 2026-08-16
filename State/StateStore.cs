@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace GooglePhotosUploader.State;
+namespace DicresPhotosUploader.State;
 
 /// <summary>
 /// Saves and loads the progress on disk. Writes to a temp file + rename

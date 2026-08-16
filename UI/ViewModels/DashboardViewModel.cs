@@ -3,12 +3,12 @@ using System.Threading;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using GooglePhotosUploader.Config;
-using GooglePhotosUploader.Google;
-using GooglePhotosUploader.Localization;
-using GooglePhotosUploader.State;
+using DicresPhotosUploader.Config;
+using DicresPhotosUploader.Google;
+using DicresPhotosUploader.Localization;
+using DicresPhotosUploader.State;
 
-namespace GooglePhotosUploader.UI.ViewModels;
+namespace DicresPhotosUploader.UI.ViewModels;
 
 public partial class DashboardViewModel : ObservableObject
 {

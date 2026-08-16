@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace GooglePhotosUploader.UI.Views;
+namespace DicresPhotosUploader.UI.Views;
 
 public partial class ScheduleView : UserControl
 {

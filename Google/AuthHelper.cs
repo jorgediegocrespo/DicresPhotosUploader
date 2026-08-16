@@ -1,8 +1,8 @@
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Util.Store;
-using GooglePhotosUploader.Localization;
+using DicresPhotosUploader.Localization;
 
-namespace GooglePhotosUploader.Google;
+namespace DicresPhotosUploader.Google;
 
 public static class AuthHelper
 {

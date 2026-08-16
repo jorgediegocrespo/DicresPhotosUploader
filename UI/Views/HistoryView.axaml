@@ -1,9 +1,9 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:GooglePhotosUploader.UI.ViewModels"
-             xmlns:state="using:GooglePhotosUploader.State"
-             xmlns:loc="using:GooglePhotosUploader.Localization"
-             x:Class="GooglePhotosUploader.UI.Views.HistoryView"
+             xmlns:vm="using:DicresPhotosUploader.UI.ViewModels"
+             xmlns:state="using:DicresPhotosUploader.State"
+             xmlns:loc="using:DicresPhotosUploader.Localization"
+             x:Class="DicresPhotosUploader.UI.Views.HistoryView"
              x:DataType="vm:HistoryViewModel">
   <Border Classes="Card" Margin="16">
     <DockPanel>

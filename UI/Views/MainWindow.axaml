@@ -1,12 +1,12 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:GooglePhotosUploader.UI.ViewModels"
-        xmlns:views="using:GooglePhotosUploader.UI.Views"
-        xmlns:loc="using:GooglePhotosUploader.Localization"
-        x:Class="GooglePhotosUploader.UI.Views.MainWindow"
+        xmlns:vm="using:DicresPhotosUploader.UI.ViewModels"
+        xmlns:views="using:DicresPhotosUploader.UI.Views"
+        xmlns:loc="using:DicresPhotosUploader.Localization"
+        x:Class="DicresPhotosUploader.UI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Title="Google Photos Uploader"
-        Icon="avares://GooglePhotosUploader/assets/app.ico"
+        Title="Dicres Photos Uploader"
+        Icon="avares://DicresPhotosUploader/assets/app.ico"
         Background="{DynamicResource BackgroundBrush}"
         Width="960" Height="680">
   <TabControl Margin="16">

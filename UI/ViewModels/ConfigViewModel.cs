@@ -1,10 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using GooglePhotosUploader.Config;
-using GooglePhotosUploader.Google;
-using GooglePhotosUploader.Localization;
+using DicresPhotosUploader.Config;
+using DicresPhotosUploader.Google;
+using DicresPhotosUploader.Localization;
 
-namespace GooglePhotosUploader.UI.ViewModels;
+namespace DicresPhotosUploader.UI.ViewModels;
 
 public record ThemeOption(string Key, string DisplayName)
 {

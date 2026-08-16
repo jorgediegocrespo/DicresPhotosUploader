@@ -1,16 +1,16 @@
-using GooglePhotosUploader.Scheduling;
+using DicresPhotosUploader.Scheduling;
 
-namespace GooglePhotosUploader.Config;
+namespace DicresPhotosUploader.Config;
 
 public class AppConfig
 {
     /// <summary>
     /// Folder where all the app's configuration/state lives
-    /// (%APPDATA%/GooglePhotosUploader on Windows, ~/Library/Application Support/GooglePhotosUploader on macOS).
+    /// (%APPDATA%/DicresPhotosUploader on Windows, ~/Library/Application Support/DicresPhotosUploader on macOS).
     /// </summary>
     public static string AppDataFolder { get; } = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "GooglePhotosUploader");
+        "DicresPhotosUploader");
 
     /// <summary>
     /// Root folder. Each direct subfolder becomes a Google Photos album.

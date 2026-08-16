@@ -2,10 +2,10 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using GooglePhotosUploader.Localization;
-using GooglePhotosUploader.State;
+using DicresPhotosUploader.Localization;
+using DicresPhotosUploader.State;
 
-namespace GooglePhotosUploader.UI.ViewModels;
+namespace DicresPhotosUploader.UI.ViewModels;
 
 public class RunHistoryRow
 {

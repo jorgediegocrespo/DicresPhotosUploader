@@ -1,8 +1,8 @@
-using GooglePhotosUploader.Config;
-using GooglePhotosUploader.Localization;
-using GooglePhotosUploader.State;
+using DicresPhotosUploader.Config;
+using DicresPhotosUploader.Localization;
+using DicresPhotosUploader.State;
 
-namespace GooglePhotosUploader.Google;
+namespace DicresPhotosUploader.Google;
 
 public record UploadRunSummary(
     bool Success,

@@ -12,4 +12,4 @@ dotnet publish -c Release -r win-x64 --self-contained true `
   -p:IncludeNativeLibrariesForSelfExtract=true `
   -o $outDir
 
-Write-Host "Generado $outDir/GooglePhotosUploader.exe"
+Write-Host "Generado $outDir/DicresPhotosUploader.exe"

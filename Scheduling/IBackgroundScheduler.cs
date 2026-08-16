@@ -1,4 +1,4 @@
-namespace GooglePhotosUploader.Scheduling;
+namespace DicresPhotosUploader.Scheduling;
 
 /// <summary>Registers/removes the periodic headless run in the OS's native scheduler.</summary>
 public interface IBackgroundScheduler

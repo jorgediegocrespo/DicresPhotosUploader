@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace GooglePhotosUploader.State;
+namespace DicresPhotosUploader.State;
 
 /// <summary>
 /// Stores the run history (max. <see cref="MaxEntries"/>, the oldest ones are discarded).

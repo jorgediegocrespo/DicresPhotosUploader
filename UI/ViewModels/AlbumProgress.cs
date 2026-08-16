@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using GooglePhotosUploader.Localization;
+using DicresPhotosUploader.Localization;
 
-namespace GooglePhotosUploader.UI.ViewModels;
+namespace DicresPhotosUploader.UI.ViewModels;
 
 // Must be observable (not a plain class) so the UI reflects UploadedCount changes
 // as they happen during a run, instead of only when the Albums collection is rebuilt.

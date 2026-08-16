@@ -5,7 +5,9 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>GooglePhotosUploader</RootNamespace>
+    <RootNamespace>DicresPhotosUploader</RootNamespace>
+    <AssemblyTitle>Dicres Photos Uploader</AssemblyTitle>
+    <Product>Dicres Photos Uploader</Product>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

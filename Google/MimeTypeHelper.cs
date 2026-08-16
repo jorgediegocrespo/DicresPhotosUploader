@@ -1,4 +1,4 @@
-namespace GooglePhotosUploader.Google;
+namespace DicresPhotosUploader.Google;
 
 public static class MimeTypeHelper
 {

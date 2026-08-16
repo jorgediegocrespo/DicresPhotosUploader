@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace GooglePhotosUploader.Config;
+namespace DicresPhotosUploader.Config;
 
 /// <summary>
 /// Loads and saves <see cref="AppConfig"/> in <c>config.json</c> inside <see cref="AppConfig.AppDataFolder"/>.

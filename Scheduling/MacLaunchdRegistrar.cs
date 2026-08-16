@@ -2,15 +2,15 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
-using GooglePhotosUploader.Config;
+using DicresPhotosUploader.Config;
 
-namespace GooglePhotosUploader.Scheduling;
+namespace DicresPhotosUploader.Scheduling;
 
 /// <summary>Creates/removes a user LaunchAgent with a StartCalendarInterval per time slot.</summary>
 [SupportedOSPlatform("macos")]
 public partial class MacLaunchdRegistrar : IBackgroundScheduler
 {
-    private const string Label = "com.jorgediegocrespo.googlephotosuploader";
+    private const string Label = "com.jorgediegocrespo.dicresphotosuploader";
 
     [LibraryImport("libc")]
     private static partial uint getuid();

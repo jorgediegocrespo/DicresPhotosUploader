@@ -1,8 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:GooglePhotosUploader.UI.ViewModels"
-             xmlns:loc="using:GooglePhotosUploader.Localization"
-             x:Class="GooglePhotosUploader.UI.Views.DashboardView"
+             xmlns:vm="using:DicresPhotosUploader.UI.ViewModels"
+             xmlns:loc="using:DicresPhotosUploader.Localization"
+             x:Class="DicresPhotosUploader.UI.Views.DashboardView"
              x:DataType="vm:DashboardViewModel">
   <Grid Margin="16" ColumnDefinitions="2*,3*" RowDefinitions="Auto,*">
     <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Classes="Card" Margin="0,0,0,16">

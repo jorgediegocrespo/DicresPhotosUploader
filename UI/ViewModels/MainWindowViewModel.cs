@@ -1,8 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using GooglePhotosUploader.Config;
-using GooglePhotosUploader.State;
+using DicresPhotosUploader.Config;
+using DicresPhotosUploader.State;
 
-namespace GooglePhotosUploader.UI.ViewModels;
+namespace DicresPhotosUploader.UI.ViewModels;
 
 public partial class MainWindowViewModel : ObservableObject
 {
