@@ -21,7 +21,20 @@ public partial class AlbumProgress : ObservableObject
 
     public string ProgressText => Loc.Format("Dashboard_UploadedOfTotal", UploadedCount, TotalCount);
 
-    partial void OnUploadedCountChanged(int value) => OnPropertyChanged(nameof(ProgressText));
+    /// <summary>Whether the album finished uploading all of its files with no failures.</summary>
+    public bool IsCompletedSuccessfully => TotalCount > 0 && UploadedCount >= TotalCount && !HasError;
 
-    partial void OnTotalCountChanged(int value) => OnPropertyChanged(nameof(ProgressText));
+    partial void OnUploadedCountChanged(int value)
+    {
+        OnPropertyChanged(nameof(ProgressText));
+        OnPropertyChanged(nameof(IsCompletedSuccessfully));
+    }
+
+    partial void OnTotalCountChanged(int value)
+    {
+        OnPropertyChanged(nameof(ProgressText));
+        OnPropertyChanged(nameof(IsCompletedSuccessfully));
+    }
+
+    partial void OnHasErrorChanged(bool value) => OnPropertyChanged(nameof(IsCompletedSuccessfully));
 }

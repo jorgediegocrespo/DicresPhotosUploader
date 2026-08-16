@@ -194,6 +194,9 @@
     <Style Selector="ProgressBar.Danger">
       <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
     </Style>
+    <Style Selector="ProgressBar.Success">
+      <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
+    </Style>
 
     <!-- DataGrid -->
     <Style Selector="DataGrid">

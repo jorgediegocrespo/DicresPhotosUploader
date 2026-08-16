@@ -31,7 +31,7 @@
                   <StackPanel Spacing="6">
                     <TextBlock Text="{Binding Name}" FontWeight="Medium" Foreground="{DynamicResource TextPrimaryBrush}" />
                     <ProgressBar Minimum="0" Maximum="{Binding TotalCount}" Value="{Binding UploadedCount}" Height="8"
-                                 Classes.Danger="{Binding HasError}" />
+                                 Classes.Danger="{Binding HasError}" Classes.Success="{Binding IsCompletedSuccessfully}" />
                     <TextBlock Text="{Binding ProgressText}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
                   </StackPanel>
                 </Border>
