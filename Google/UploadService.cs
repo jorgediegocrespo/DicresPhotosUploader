@@ -45,7 +45,7 @@ public class UploadService
 
         try
         {
-            var credential = await AuthHelper.GetCredentialAsync(appConfig.ClientSecretsPath, appConfig.TokenStorePath);
+            var credential = await AuthHelper.GetCredentialAsync(appConfig.TokenStorePath);
             using var http = new HttpClient();
             http.Timeout = TimeSpan.FromMinutes(5); // large videos can take a while
 
@@ -205,7 +205,7 @@ public class UploadService
 
         try
         {
-            var credential = await AuthHelper.GetCredentialAsync(appConfig.ClientSecretsPath, appConfig.TokenStorePath);
+            var credential = await AuthHelper.GetCredentialAsync(appConfig.TokenStorePath);
             using var http = new HttpClient();
             http.Timeout = TimeSpan.FromMinutes(5); // large videos can take a while
 

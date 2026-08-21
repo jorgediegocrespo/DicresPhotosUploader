@@ -19,6 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Embedded so the OAuth credentials ship with the app and the user never has to pick the file. -->
+    <EmbeddedResource Include="client_secret.json" Condition="Exists('client_secret.json')" LogicalName="client_secret.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- We only use Google.Apis.Auth for the OAuth2 flow (login + token refresh). -->
     <!-- The rest of the Google Photos API calls are made with HttpClient directly, -->
     <!-- because Google doesn't maintain a modern typed client for the Photos Library API. -->

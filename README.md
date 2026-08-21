@@ -57,11 +57,11 @@ dotnet run
 This opens the window with 4 tabs:
 
 - **Dashboard**: progress per album, "Run now" button, and a live log.
-- **Configuration**: root folder, `client_secret.json` (with a file picker),
-  discarded files folder, batch size, allowed extensions, and the
-  "Reauthorize with Google" button (opens the browser to sign in; only
-  needed once, and it doesn't request permission to read your library, only
-  to **add** photos).
+- **Configuration**: root folder, discarded files folder, batch size,
+  allowed extensions, and the "Reauthorize with Google" button (opens the
+  browser to sign in; only needed once, and it doesn't request permission to
+  read your library, only to **add** photos). The `client_secret.json` OAuth
+  credentials ship embedded in the app, so there's nothing to select.
 - **Schedule**: days of the week + time, and the "Enable background
   execution" switch. When saved, it registers the task in Task Scheduler
   (Windows) or the LaunchAgent (macOS). Requires having signed in with

@@ -1,3 +1,4 @@
+using System.Reflection;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Util.Store;
 using DicresPhotosUploader.Localization;
@@ -11,20 +12,18 @@ public static class AuthHelper
     // It's exactly what this application needs and avoids requesting extra permissions.
     private static readonly string[] Scopes = { "https://www.googleapis.com/auth/photoslibrary.appendonly" };
 
+    private const string ClientSecretResourceName = "client_secret.json";
+
     /// <summary>
     /// The first time it opens the browser so you can sign in and authorize the app.
     /// Subsequent times it reuses the token saved in TokenStorePath (and refreshes it
     /// automatically if it has expired), so you don't need to sign in
     /// again every day.
     /// </summary>
-    public static async Task<UserCredential> GetCredentialAsync(string clientSecretsPath, string tokenStorePath)
+    public static async Task<UserCredential> GetCredentialAsync(string tokenStorePath)
     {
-        if (!File.Exists(clientSecretsPath))
-        {
-            throw new FileNotFoundException(Loc.Format("Auth_MissingClientSecret", clientSecretsPath));
-        }
-
-        await using var stream = new FileStream(clientSecretsPath, FileMode.Open, FileAccess.Read);
+        await using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(ClientSecretResourceName)
+            ?? throw new FileNotFoundException(Loc.Get("Auth_MissingClientSecret"));
 
         var credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
             (await GoogleClientSecrets.FromStreamAsync(stream)).Secrets,

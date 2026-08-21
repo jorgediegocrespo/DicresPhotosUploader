@@ -36,32 +36,6 @@ public partial class ConfigView : UserControl
         }
     }
 
-    private async void OnBrowseClientSecret(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        if (DataContext is not ConfigViewModel vm)
-        {
-            return;
-        }
-
-        var topLevel = TopLevel.GetTopLevel(this);
-        if (topLevel is null)
-        {
-            return;
-        }
-
-        var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-        {
-            Title = Loc.Get("Picker_SelectClientSecret"),
-            AllowMultiple = false,
-            FileTypeFilter = new[] { new FilePickerFileType("JSON") { Patterns = new[] { "*.json" } } }
-        });
-
-        if (files.Count > 0)
-        {
-            vm.ClientSecretsPath = files[0].Path.LocalPath;
-        }
-    }
-
     private async void OnBrowseErroredFolder(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         if (DataContext is not ConfigViewModel vm)

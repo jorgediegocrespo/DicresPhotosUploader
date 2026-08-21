@@ -164,14 +164,14 @@ duplication.
 
 | File | Responsibility |
 |---|---|
-| [`AppConfig.cs`](Config/AppConfig.cs) | Plain data class with every user-configurable setting: root folder, `client_secret.json` path, state/history file paths, token store path, errored-files folder, API batch size, allowed file extensions, and the list of `ScheduleEntry` for background runs. Also exposes the static `AppConfig.AppDataFolder` (per-OS app-data root, via `Environment.SpecialFolder.ApplicationData`). |
+| [`AppConfig.cs`](Config/AppConfig.cs) | Plain data class with every user-configurable setting: root folder, state/history file paths, token store path, errored-files folder, API batch size, allowed file extensions, and the list of `ScheduleEntry` for background runs. Also exposes the static `AppConfig.AppDataFolder` (per-OS app-data root, via `Environment.SpecialFolder.ApplicationData`). |
 | [`ConfigStore.cs`](Config/ConfigStore.cs) | Loads/saves `AppConfig` as `config.json` inside `AppDataFolder`. Uses the "write to `.tmp` then `File.Move(overwrite:true)`" pattern for atomic writes (avoids a corrupted config file if the app is killed mid-write). |
 
 ### 4.2 `Google/`
 
 | File | Responsibility |
 |---|---|
-| [`AuthHelper.cs`](Google/AuthHelper.cs) | Wraps `Google.Apis.Auth` OAuth2 flow. Opens the browser on first sign-in, then silently reuses/refreshes the token stored in `TokenStorePath` (`FileDataStore`). Requests only the `photoslibrary.appendonly` scope (create albums + add photos — cannot read or modify the rest of the library). |
+| [`AuthHelper.cs`](Google/AuthHelper.cs) | Wraps `Google.Apis.Auth` OAuth2 flow. Reads the OAuth client secrets from `client_secret.json`, embedded in the assembly as a resource (so the user never has to supply it). Opens the browser on first sign-in, then silently reuses/refreshes the token stored in `TokenStorePath` (`FileDataStore`). Requests only the `photoslibrary.appendonly` scope (create albums + add photos — cannot read or modify the rest of the library). |
 | [`PhotosApiClient.cs`](Google/PhotosApiClient.cs) | Thin, hand-rolled HTTP client for the **Google Photos Library API** (there is no official modern typed .NET client for this API, hence raw `HttpClient` + manual JSON (de)serialization with `System.Text.Json`). Three operations: `CreateAlbumAsync`, `UploadBytesAsync` (uploads raw bytes, returns an "upload token"), `BatchCreateMediaItemsAsync` (redeems up to `BatchSize` upload tokens at once and attaches them to an album, returning per-file success/failure). Detects HTTP 429 and throws `QuotaExceededException`. |
 | [`MimeTypeHelper.cs`](Google/MimeTypeHelper.cs) | Static extension-to-MIME-type lookup table used when uploading bytes. **Add new supported file types here AND in `AppConfig.AllowedExtensions`** (see §8.1). |
 | [`QuotaExceededException.cs`](Google/QuotaExceededException.cs) | Marker exception thrown when Google returns HTTP 429 (daily quota exhausted). Caught by `UploadService` to stop gracefully and preserve progress. |

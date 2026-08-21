@@ -25,9 +25,6 @@ public partial class ConfigViewModel : ObservableObject
     private string _rootFolder;
 
     [ObservableProperty]
-    private string _clientSecretsPath;
-
-    [ObservableProperty]
     private string _erroredFolderPath;
 
     [ObservableProperty]
@@ -41,6 +38,10 @@ public partial class ConfigViewModel : ObservableObject
 
     [ObservableProperty]
     private bool _isAuthorizing;
+
+    /// <summary>True once the saved configuration is complete (root folder set and Google account authorized).</summary>
+    [ObservableProperty]
+    private bool _isConfigurationComplete;
 
     public List<ThemeOption> ThemeOptions { get; } = new()
     {
@@ -68,7 +69,6 @@ public partial class ConfigViewModel : ObservableObject
         _config = config;
 
         _rootFolder = config.RootFolder;
-        _clientSecretsPath = config.ClientSecretsPath;
         _erroredFolderPath = string.IsNullOrWhiteSpace(config.ErroredFolderPath)
             ? config.ErroredFolderPath
             : Path.GetFullPath(config.ErroredFolderPath);
@@ -76,7 +76,17 @@ public partial class ConfigViewModel : ObservableObject
         _allowedExtensionsText = string.Join(", ", config.AllowedExtensions);
         _selectedTheme = ThemeOptions.FirstOrDefault(t => t.Key == config.ThemePreference) ?? ThemeOptions[0];
         _selectedLanguage = LanguageOptions.FirstOrDefault(l => l.Key == config.LanguagePreference) ?? LanguageOptions[0];
+        _isConfigurationComplete = ComputeIsConfigurationComplete();
     }
+
+    /// <summary>A configuration is considered complete when a valid root folder is set and Google has been authorized.</summary>
+    private bool ComputeIsConfigurationComplete() =>
+        !string.IsNullOrWhiteSpace(_config.RootFolder)
+        && Directory.Exists(_config.RootFolder)
+        && !string.IsNullOrWhiteSpace(_config.ErroredFolderPath)
+        && _config.AllowedExtensions.Length > 0
+        && Directory.Exists(_config.TokenStorePath)
+        && Directory.EnumerateFiles(_config.TokenStorePath).Any();
 
     partial void OnSelectedThemeChanged(ThemeOption value)
     {
@@ -96,7 +106,6 @@ public partial class ConfigViewModel : ObservableObject
     private void Save()
     {
         _config.RootFolder = RootFolder;
-        _config.ClientSecretsPath = ClientSecretsPath;
         _config.ErroredFolderPath = ErroredFolderPath;
         _config.BatchSize = BatchSize;
         _config.AllowedExtensions = AllowedExtensionsText
@@ -105,6 +114,7 @@ public partial class ConfigViewModel : ObservableObject
 
         _configStore.Save(_config);
         StatusMessage = Loc.Get("Config_StatusSaved");
+        IsConfigurationComplete = ComputeIsConfigurationComplete();
     }
 
     [RelayCommand]
@@ -120,7 +130,7 @@ public partial class ConfigViewModel : ObservableObject
                 Directory.Delete(_config.TokenStorePath, recursive: true);
             }
 
-            await AuthHelper.GetCredentialAsync(_config.ClientSecretsPath, _config.TokenStorePath);
+            await AuthHelper.GetCredentialAsync(_config.TokenStorePath);
             StatusMessage = Loc.Get("Config_StatusAuthorized");
         }
         catch (Exception ex)
@@ -130,6 +140,7 @@ public partial class ConfigViewModel : ObservableObject
         finally
         {
             IsAuthorizing = false;
+            IsConfigurationComplete = ComputeIsConfigurationComplete();
         }
     }
 }

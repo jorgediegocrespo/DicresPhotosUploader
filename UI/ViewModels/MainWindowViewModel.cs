@@ -11,11 +11,17 @@ public partial class MainWindowViewModel : ObservableObject
     public ScheduleViewModel Schedule { get; }
     public HistoryViewModel History { get; }
 
+    [ObservableProperty]
+    private int _selectedTabIndex;
+
     public MainWindowViewModel(ConfigStore configStore, AppConfig config, StateStore stateStore, RunHistoryStore historyStore)
     {
         Dashboard = new DashboardViewModel(config, stateStore, historyStore);
         Config = new ConfigViewModel(configStore, config);
         Schedule = new ScheduleViewModel(configStore, config);
         History = new HistoryViewModel(historyStore);
+
+        // Tab order in MainWindow.axaml: 0 = Dashboard, 1 = Configuration, 2 = Schedule, 3 = History.
+        SelectedTabIndex = Config.IsConfigurationComplete ? 0 : 1;
     }
 }

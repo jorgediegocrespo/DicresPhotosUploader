@@ -18,11 +18,6 @@ public class AppConfig
     public string RootFolder { get; set; } = "";
 
     /// <summary>
-    /// Path to the client_secret.json downloaded from Google Cloud Console.
-    /// </summary>
-    public string ClientSecretsPath { get; set; } = Path.Combine(AppDataFolder, "client_secret.json");
-
-    /// <summary>
     /// File where the progress is saved (created albums, already uploaded files, quota used).
     /// </summary>
     public string StateFilePath { get; set; } = Path.Combine(AppDataFolder, "state.json");

@@ -9,17 +9,17 @@
         Icon="avares://DicresPhotosUploader/assets/app.ico"
         Background="{DynamicResource BackgroundBrush}"
         Width="960" Height="680">
-  <TabControl Margin="16">
-    <TabItem Header="{loc:Tr Tab_Dashboard}">
+  <TabControl Margin="16" SelectedIndex="{Binding SelectedTabIndex}">
+    <TabItem Header="{loc:Tr Tab_Dashboard}" IsEnabled="{Binding Config.IsConfigurationComplete}">
       <views:DashboardView DataContext="{Binding Dashboard}" />
     </TabItem>
     <TabItem Header="{loc:Tr Tab_Configuration}">
       <views:ConfigView DataContext="{Binding Config}" />
     </TabItem>
-    <TabItem Header="{loc:Tr Tab_Schedule}">
+    <TabItem Header="{loc:Tr Tab_Schedule}" IsEnabled="{Binding Config.IsConfigurationComplete}">
       <views:ScheduleView DataContext="{Binding Schedule}" />
     </TabItem>
-    <TabItem Header="{loc:Tr Tab_History}">
+    <TabItem Header="{loc:Tr Tab_History}" IsEnabled="{Binding Config.IsConfigurationComplete}">
       <views:HistoryView DataContext="{Binding History}" />
     </TabItem>
   </TabControl>

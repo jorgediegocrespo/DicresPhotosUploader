@@ -64,7 +64,6 @@ public static class Loc
 
         // Config view
         ["Config_RootFolderLabel"] = "Root folder (each subfolder = one album)",
-        ["Config_ClientSecretLabel"] = "client_secret.json file (Google Cloud OAuth)",
         ["Config_ErroredFolderLabel"] = "Discarded files folder (errored)",
         ["Config_BatchSizeLabel"] = "Batch size (BatchSize, max. 50)",
         ["Config_AllowedExtensionsLabel"] = "Allowed extensions (comma-separated)",
@@ -76,6 +75,7 @@ public static class Loc
         ["Config_StatusAuthorized"] = "Google session started successfully.",
         ["Config_StatusAuthorizeError"] = "Error signing in: {0}",
         ["Config_StatusLanguageChanged"] = "Language updated. Restart the app for the change to take effect.",
+        ["Config_LockedTabsMessage"] = "The other tabs are locked until the configuration is complete and correct: set a valid root folder and authorize your Google account.",
         ["Theme_System"] = "System",
         ["Theme_Light"] = "Light",
         ["Theme_Dark"] = "Dark",
@@ -83,9 +83,8 @@ public static class Loc
         ["Language_English"] = "English",
         ["Language_Spanish"] = "Español",
         ["Picker_SelectRootFolder"] = "Select the root folder",
-        ["Picker_SelectClientSecret"] = "Select client_secret.json",
         ["Picker_SelectErroredFolder"] = "Select the discarded files folder",
-        ["Auth_MissingClientSecret"] = "Cannot find the OAuth credentials file at '{0}'. Download it from Google Cloud Console (see README.md).",
+        ["Auth_MissingClientSecret"] = "The OAuth credentials are missing from this build. Reinstall the app or contact support.",
 
         // Dashboard view
         ["Dashboard_NoRunYet"] = "No upload has been run yet.",
@@ -196,7 +195,6 @@ public static class Loc
 
         // Config view
         ["Config_RootFolderLabel"] = "Carpeta raíz (cada subcarpeta = un álbum)",
-        ["Config_ClientSecretLabel"] = "Archivo client_secret.json (OAuth de Google Cloud)",
         ["Config_ErroredFolderLabel"] = "Carpeta de archivos descartados (errored)",
         ["Config_BatchSizeLabel"] = "Tamaño de lote (BatchSize, máx. 50)",
         ["Config_AllowedExtensionsLabel"] = "Extensiones permitidas (separadas por comas)",
@@ -208,6 +206,7 @@ public static class Loc
         ["Config_StatusAuthorized"] = "Sesión de Google iniciada correctamente.",
         ["Config_StatusAuthorizeError"] = "Error al iniciar sesión: {0}",
         ["Config_StatusLanguageChanged"] = "Idioma actualizado. Reinicia la aplicación para que el cambio surta efecto.",
+        ["Config_LockedTabsMessage"] = "El resto de pestañas estarán bloqueadas hasta que la configuración esté completa y sea correcta: establece una carpeta raíz válida y autoriza tu cuenta de Google.",
         ["Theme_System"] = "Sistema",
         ["Theme_Light"] = "Claro",
         ["Theme_Dark"] = "Oscuro",
@@ -215,9 +214,8 @@ public static class Loc
         ["Language_English"] = "English",
         ["Language_Spanish"] = "Español",
         ["Picker_SelectRootFolder"] = "Selecciona la carpeta raíz",
-        ["Picker_SelectClientSecret"] = "Selecciona client_secret.json",
         ["Picker_SelectErroredFolder"] = "Selecciona la carpeta de archivos descartados",
-        ["Auth_MissingClientSecret"] = "No se encuentra el archivo de credenciales OAuth en '{0}'. Descárgalo desde Google Cloud Console (consulta README.md).",
+        ["Auth_MissingClientSecret"] = "Faltan las credenciales OAuth en esta compilación. Reinstala la app o contacta con soporte.",
 
         // Dashboard view
         ["Dashboard_NoRunYet"] = "Todavía no se ha ejecutado ninguna subida.",
