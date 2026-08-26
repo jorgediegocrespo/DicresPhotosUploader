@@ -1,6 +1,5 @@
 namespace DicresPhotosUploader.Scheduling;
 
-/// <summary>A recurring weekly trigger: every <see cref="DayOfWeek"/> at <see cref="Hour"/>:<see cref="Minute"/>.</summary>
 public class ScheduleEntry
 {
     public DayOfWeek DayOfWeek { get; set; }

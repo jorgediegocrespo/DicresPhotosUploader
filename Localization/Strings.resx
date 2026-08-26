@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Tab_Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Tab_Configuration" xml:space="preserve">
+    <value>Configuration</value>
+  </data>
+  <data name="Tab_Schedule" xml:space="preserve">
+    <value>Schedule</value>
+  </data>
+  <data name="Tab_History" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="Common_Choose" xml:space="preserve">
+    <value>Choose...</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Config_RootFolderLabel" xml:space="preserve">
+    <value>Root folder (each subfolder = one album)</value>
+  </data>
+  <data name="Config_ErroredFolderLabel" xml:space="preserve">
+    <value>Discarded files folder (errored)</value>
+  </data>
+  <data name="Config_BatchSizeLabel" xml:space="preserve">
+    <value>Batch size (BatchSize, max. 50)</value>
+  </data>
+  <data name="Config_AllowedExtensionsLabel" xml:space="preserve">
+    <value>Allowed extensions (comma-separated)</value>
+  </data>
+  <data name="Config_ThemeLabel" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Config_LanguageLabel" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Config_ReauthorizeButton" xml:space="preserve">
+    <value>Reauthorize with Google</value>
+  </data>
+  <data name="Config_StatusSaved" xml:space="preserve">
+    <value>Configuration saved.</value>
+  </data>
+  <data name="Config_StatusAuthorizing" xml:space="preserve">
+    <value>Opening the browser to sign in with Google...</value>
+  </data>
+  <data name="Config_StatusAuthorized" xml:space="preserve">
+    <value>Google session started successfully.</value>
+  </data>
+  <data name="Config_StatusAuthorizeError" xml:space="preserve">
+    <value>Error signing in: {0}</value>
+  </data>
+  <data name="Config_StatusLanguageChanged" xml:space="preserve">
+    <value>Language updated. Restart the app for the change to take effect.</value>
+  </data>
+  <data name="Config_LockedTabsMessage" xml:space="preserve">
+    <value>The other tabs are locked until the configuration is complete and correct: set a valid root folder and authorize your Google account.</value>
+  </data>
+  <data name="Theme_System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="Language_System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Language_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Language_Spanish" xml:space="preserve">
+    <value>Español</value>
+  </data>
+  <data name="Picker_SelectRootFolder" xml:space="preserve">
+    <value>Select the root folder</value>
+  </data>
+  <data name="Picker_SelectErroredFolder" xml:space="preserve">
+    <value>Select the discarded files folder</value>
+  </data>
+  <data name="Auth_MissingClientSecret" xml:space="preserve">
+    <value>The OAuth credentials are missing from this build. Reinstall the app or contact support.</value>
+  </data>
+  <data name="Dashboard_NoRunYet" xml:space="preserve">
+    <value>No upload has been run yet.</value>
+  </data>
+  <data name="Dashboard_HistoricalTotal" xml:space="preserve">
+    <value>Historical total uploaded: {0}</value>
+  </data>
+  <data name="Dashboard_RunNow" xml:space="preserve">
+    <value>Run now</value>
+  </data>
+  <data name="Dashboard_ReprocessErrors" xml:space="preserve">
+    <value>Reprocess errors</value>
+  </data>
+  <data name="Dashboard_ProgressByAlbum" xml:space="preserve">
+    <value>Progress by album</value>
+  </data>
+  <data name="Dashboard_ShowOnlyErrorAlbums" xml:space="preserve">
+    <value>Show only albums with errors</value>
+  </data>
+  <data name="Dashboard_RunLog" xml:space="preserve">
+    <value>Run log</value>
+  </data>
+  <data name="Dashboard_UploadedOfTotal" xml:space="preserve">
+    <value>{0} / {1} uploaded</value>
+  </data>
+  <data name="Dashboard_RunInProgress" xml:space="preserve">
+    <value>A run is already in progress (manual or scheduled). Try again in a few minutes.</value>
+  </data>
+  <data name="Dashboard_LastRunSuccess" xml:space="preserve">
+    <value>Last run: {0} uploaded, {1} discarded (historical: {2}).</value>
+  </data>
+  <data name="Dashboard_LastRunError" xml:space="preserve">
+    <value>Last run had errors: {0}</value>
+  </data>
+  <data name="Dashboard_LastReprocessSuccess" xml:space="preserve">
+    <value>Last reprocess run: {0} re-uploaded (historical: {1}).</value>
+  </data>
+  <data name="Dashboard_LastReprocessError" xml:space="preserve">
+    <value>Last reprocess run had errors: {0}</value>
+  </data>
+  <data name="Schedule_RunDays" xml:space="preserve">
+    <value>Run days</value>
+  </data>
+  <data name="Schedule_Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="Schedule_EnableBackground" xml:space="preserve">
+    <value>Enable background execution</value>
+  </data>
+  <data name="Schedule_SaveSchedule" xml:space="preserve">
+    <value>Save schedule</value>
+  </data>
+  <data name="Schedule_Note" xml:space="preserve">
+    <value>You must sign in with Google (Configuration tab) before enabling the schedule. The app must be installed in its final location before saving the schedule.</value>
+  </data>
+  <data name="Schedule_StatusOnlyWinMac" xml:space="preserve">
+    <value>Scheduled execution is only available on Windows and macOS.</value>
+  </data>
+  <data name="Schedule_StatusNeedSignIn" xml:space="preserve">
+    <value>First sign in with Google from the Configuration tab.</value>
+  </data>
+  <data name="Schedule_StatusSelectDay" xml:space="preserve">
+    <value>Select at least one day.</value>
+  </data>
+  <data name="Schedule_StatusSavedNextRun" xml:space="preserve">
+    <value>Schedule saved. Approximate next run: {0}.</value>
+  </data>
+  <data name="Schedule_StatusDisabled" xml:space="preserve">
+    <value>Background execution disabled.</value>
+  </data>
+  <data name="Schedule_StatusRegisterError" xml:space="preserve">
+    <value>Error registering the schedule: {0}</value>
+  </data>
+  <data name="Schedule_StatusActiveNextRun" xml:space="preserve">
+    <value>Active. Approximate next run: {0}.</value>
+  </data>
+  <data name="Day_Monday" xml:space="preserve">
+    <value>Monday</value>
+  </data>
+  <data name="Day_Tuesday" xml:space="preserve">
+    <value>Tuesday</value>
+  </data>
+  <data name="Day_Wednesday" xml:space="preserve">
+    <value>Wednesday</value>
+  </data>
+  <data name="Day_Thursday" xml:space="preserve">
+    <value>Thursday</value>
+  </data>
+  <data name="Day_Friday" xml:space="preserve">
+    <value>Friday</value>
+  </data>
+  <data name="Day_Saturday" xml:space="preserve">
+    <value>Saturday</value>
+  </data>
+  <data name="Day_Sunday" xml:space="preserve">
+    <value>Sunday</value>
+  </data>
+  <data name="History_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="History_ColStarted" xml:space="preserve">
+    <value>Started</value>
+  </data>
+  <data name="History_ColOrigin" xml:space="preserve">
+    <value>Origin</value>
+  </data>
+  <data name="History_ColStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="History_ColUploaded" xml:space="preserve">
+    <value>Uploaded</value>
+  </data>
+  <data name="History_ColDiscarded" xml:space="preserve">
+    <value>Discarded</value>
+  </data>
+  <data name="History_ColHistorical" xml:space="preserve">
+    <value>Historical</value>
+  </data>
+  <data name="History_ColError" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="RunOrigin_Manual" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="RunOrigin_Scheduled" xml:space="preserve">
+    <value>Scheduled</value>
+  </data>
+  <data name="RunStatus_Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="RunStatus_QuotaExceeded" xml:space="preserve">
+    <value>Quota exceeded</value>
+  </data>
+  <data name="RunStatus_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="RunStatus_Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="Upload_RootFolderMissing" xml:space="preserve">
+    <value>The root folder '{0}' does not exist.</value>
+  </data>
+  <data name="Upload_ErrorPrefix" xml:space="preserve">
+    <value>ERROR: {0}</value>
+  </data>
+  <data name="Upload_FoundFolders" xml:space="preserve">
+    <value>Found {0} folders (= {0} potential albums).</value>
+  </data>
+  <data name="Upload_CreatingAlbum" xml:space="preserve">
+    <value>Creating album '{0}'...</value>
+  </data>
+  <data name="Upload_AlbumNothingPending" xml:space="preserve">
+    <value>Album '{0}': nothing pending.</value>
+  </data>
+  <data name="Upload_AlbumPendingFiles" xml:space="preserve">
+    <value>Album '{0}': {1} pending files.</value>
+  </data>
+  <data name="Upload_ProgressUploaded" xml:space="preserve">
+    <value>  ... {0} files uploaded in total (historical). Requests today: {1}.</value>
+  </data>
+  <data name="Upload_SummaryHeader" xml:space="preserve">
+    <value>=== Summary of this run ===</value>
+  </data>
+  <data name="Upload_SummaryUploaded" xml:space="preserve">
+    <value>Photos/videos uploaded in this run: {0}</value>
+  </data>
+  <data name="Upload_SummaryDiscarded" xml:space="preserve">
+    <value>Photos/videos discarded (copied to '{0}'): {1}</value>
+  </data>
+  <data name="Upload_SummaryHistorical" xml:space="preserve">
+    <value>Historical total uploaded: {0}</value>
+  </data>
+  <data name="Upload_SummaryApiRequests" xml:space="preserve">
+    <value>API requests made today: {0}</value>
+  </data>
+  <data name="Upload_QuotaWarning" xml:space="preserve">
+    <value>WARNING: {0}</value>
+  </data>
+  <data name="Upload_QuotaResume" xml:space="preserve">
+    <value>Progress has been saved. Relaunch the application later (or tomorrow) to continue.</value>
+  </data>
+  <data name="Upload_Cancelled" xml:space="preserve">
+    <value>Run cancelled by the user. Progress has been saved.</value>
+  </data>
+  <data name="Upload_CancelledMessage" xml:space="preserve">
+    <value>Cancelled by the user</value>
+  </data>
+  <data name="Upload_UnexpectedError" xml:space="preserve">
+    <value>Unexpected ERROR: {0}</value>
+  </data>
+  <data name="Upload_Discarded" xml:space="preserve">
+    <value>  ✗ Discarded: {0} ({1})</value>
+  </data>
+  <data name="Upload_FailuresHeader" xml:space="preserve">
+    <value>Failed photos/videos in this run ({0}):</value>
+  </data>
+  <data name="Upload_FailureLine" xml:space="preserve">
+    <value>  - [{0}] {1}: {2}</value>
+  </data>
+  <data name="Upload_ReuploadedSuccess" xml:space="preserve">
+    <value>  ✓ Re-uploaded successfully: {0}</value>
+  </data>
+  <data name="Upload_CouldNotRemoveErrored" xml:space="preserve">
+    <value>    ⚠ Could not remove '{0}' from the errored folder after a successful re-upload: {1}</value>
+  </data>
+  <data name="Upload_ErroredFolderMissing" xml:space="preserve">
+    <value>The errored folder '{0}' does not exist.</value>
+  </data>
+  <data name="Upload_ReprocessFound" xml:space="preserve">
+    <value>Reprocessing errored files: found {0} album folder(s) under '{1}'.</value>
+  </data>
+  <data name="Upload_ReprocessRetrying" xml:space="preserve">
+    <value>Album '{0}': retrying {1} errored file(s).</value>
+  </data>
+  <data name="Upload_ReprocessSummaryHeader" xml:space="preserve">
+    <value>=== Summary of this reprocess run ===</value>
+  </data>
+  <data name="Upload_ReprocessSummaryReuploaded" xml:space="preserve">
+    <value>Photos/videos re-uploaded successfully: {0}</value>
+  </data>
+  <data name="Upload_ReprocessSummaryStillFailing" xml:space="preserve">
+    <value>Photos/videos still failing (kept in '{0}'): {1}</value>
+  </data>
+  <data name="Upload_ReprocessCancelled" xml:space="preserve">
+    <value>Reprocess run cancelled by the user. Progress has been saved.</value>
+  </data>
+  <data name="Upload_StillFailing" xml:space="preserve">
+    <value>  ✗ Still failing, kept in the errored folder: {0} ({1})</value>
+  </data>
+  <data name="Upload_ReprocessSucceededHeader" xml:space="preserve">
+    <value>Successfully re-uploaded photos/videos ({0}):</value>
+  </data>
+  <data name="Upload_SucceededLine" xml:space="preserve">
+    <value>  - [{0}] {1}</value>
+  </data>
+  <data name="Upload_CopySaved" xml:space="preserve">
+    <value>    → Copy saved to '{0}' for manual review (the original was not touched).</value>
+  </data>
+  <data name="Upload_CouldNotCopy" xml:space="preserve">
+    <value>    ⚠ Could not copy the failed file to '{0}': {1}</value>
+  </data>
+  <data name="Upload_UnknownConfirmFailure" xml:space="preserve">
+    <value>unknown failure while confirming the media item</value>
+  </data>
+  <data name="Upload_EmptyApiResponse" xml:space="preserve">
+    <value>Empty or unexpected response from the API</value>
+  </data>
+  <data name="Quota_ContextCreateAlbum" xml:space="preserve">
+    <value>create the album '{0}'</value>
+  </data>
+  <data name="Quota_ContextUploadFile" xml:space="preserve">
+    <value>upload the file '{0}'</value>
+  </data>
+  <data name="Quota_ContextConfirmBatch" xml:space="preserve">
+    <value>confirm a batch of uploaded photos</value>
+  </data>
+  <data name="Quota_ExceededMessage" xml:space="preserve">
+    <value>Google returned 429 (quota exhausted) while trying to {0}. Stop the application and relaunch it later or tomorrow.</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>About DPU</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="About_RepoLink" xml:space="preserve">
+    <value>GitHub repository</value>
+  </data>
+  <data name="About_WebsiteLink" xml:space="preserve">
+    <value>App website</value>
+  </data>
+</root>

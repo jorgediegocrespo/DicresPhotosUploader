@@ -1,0 +1,21 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="using:DicresPhotosUploader.Localization"
+        x:Class="DicresPhotosUploader.UI.Views.AboutWindow"
+        Title="{loc:Tr About_Title}"
+        Icon="avares://DicresPhotosUploader/assets/app.ico"
+        Width="360"
+        CanResize="False"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource BackgroundBrush}">
+  <StackPanel Margin="24" Spacing="12" HorizontalAlignment="Center">
+    <Image Source="avares://DicresPhotosUploader/assets/icon.png" Width="96" Height="96" HorizontalAlignment="Center" />
+    <TextBlock Text="Dicres Photos Uploader" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" />
+    <TextBlock x:Name="VersionText" HorizontalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" />
+    <StackPanel Spacing="6" HorizontalAlignment="Center" Margin="0,12,0,0">
+      <HyperlinkButton Content="{loc:Tr About_RepoLink}" Click="OnRepoLinkClick" HorizontalAlignment="Center" />
+      <HyperlinkButton Content="{loc:Tr About_WebsiteLink}" Click="OnWebsiteLinkClick" HorizontalAlignment="Center" />
+    </StackPanel>
+  </StackPanel>
+</Window>

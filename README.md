@@ -36,7 +36,9 @@ on each run, without re-uploading anything already uploaded.
      sign in; that's normal — click "Advanced" → "Go to [your app]").
 4. Menu → **APIs & Services** → **Credentials** → **Create credentials** → **OAuth client ID**.
    - Application type: **Desktop app**.
-   - Download the generated JSON (you'll select it from the app in step 4).
+   - Download the generated JSON and save it as `client_secret.json` in the
+     project root: it's embedded into the assembly at build time, so the app
+     never asks the user for it.
 
 ## 3. Where the configuration and state live
 
@@ -56,17 +58,31 @@ dotnet run
 
 This opens the window with 4 tabs:
 
-- **Dashboard**: progress per album, "Run now" button, and a live log.
+- **Dashboard**: progress per album, "Run now" and "Reprocess errors"
+  buttons, a filter to show only albums with errors, and a live log.
 - **Configuration**: root folder, discarded files folder, batch size,
-  allowed extensions, and the "Reauthorize with Google" button (opens the
-  browser to sign in; only needed once, and it doesn't request permission to
-  read your library, only to **add** photos). The `client_secret.json` OAuth
-  credentials ship embedded in the app, so there's nothing to select.
+  allowed extensions, theme (System/Light/Dark), language
+  (System/English/Español), and the "Reauthorize with Google" button (opens
+  the browser to sign in; only needed once, and it doesn't request
+  permission to read your library, only to **add** photos). The
+  `client_secret.json` OAuth credentials ship embedded in the app, so
+  there's nothing to select. The rest of the tabs stay locked until this one
+  is complete (valid root folder + Google account authorized).
 - **Schedule**: days of the week + time, and the "Enable background
   execution" switch. When saved, it registers the task in Task Scheduler
   (Windows) or the LaunchAgent (macOS). Requires having signed in with
   Google at least once from Configuration.
 - **History**: past runs (manual and scheduled) with their result.
+
+There is also an **About** entry in the application menu (the app menu on
+macOS) showing the version and links to the repository and the product page.
+
+### 4.1 Language
+
+The interface and the run logs are available in **English** and **Spanish**.
+By default the app follows the operating system's language ("System"); you
+can force one from the Configuration tab. The change takes effect **the next
+time you start the app**.
 
 ## 5. Publishing the standalone app (.exe / .app)
 
@@ -103,18 +119,25 @@ at the time it's saved.
 
 ## 7. Photos that fail to upload
 
-If a photo fails 3 times (in the same run or across different runs — the
-failure counter persists in `state.json`), the application:
+If a photo fails to upload, the application discards it right away (there
+are no automatic retries):
 
-1. Discards it permanently (it won't be retried automatically anymore).
-2. **Copies** the original file to `<ErroredFolderPath>/<AlbumName>/<file>`
+1. It won't be attempted again in future runs (it's recorded in
+   `state.json`).
+2. It **copies** the original file to `<ErroredFolderPath>/<AlbumName>/<file>`
    (for example: `errored/Summer 2019/IMG_045.jpg`).
 3. The original file on your disk **is never touched**: it stays exactly
    where it always was in your photos folder. What's in `errored/` is just
    a copy so you can review it, open it, or try uploading it by hand later.
 
 Check the run log (Dashboard/History, or the `errored/` folder) to see which
-photos are pending manual review.
+photos are pending manual review. At the end of every run the log includes a
+list of the files that failed and why.
+
+Use the **"Reprocess errors"** button on the Dashboard to retry everything
+in the `errored/` folder: files that upload successfully are removed from
+that folder and marked as uploaded (so a normal run won't try them again),
+and the ones that still fail are left there for you to review.
 
 ## 8. Expected root folder structure
 

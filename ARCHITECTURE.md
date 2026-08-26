@@ -42,7 +42,7 @@ here's the minimum:
   with the same class name, generated/linked via `InitializeComponent()`.
   Code-behind in this project is intentionally almost empty — just
   `InitializeComponent()` plus, in one case, a native file-picker call that
-  has no ViewModel-friendly equivalent (see §6.3).
+  has no ViewModel-friendly equivalent (see §4.7).
 - **MVVM pattern**: Views (`.axaml`) bind to ViewModels (plain C# classes)
   via the `DataContext` property and `{Binding PropertyName}` expressions in
   XAML. The ViewModel never references the View — communication is
@@ -98,13 +98,17 @@ flowchart TD
   builds and starts the Avalonia app (`App` class, see §3.2), which shows
   `MainWindow`.
 - **`--run-scheduled`**: this is how the OS scheduler invokes the app in the
-  background. It calls `RunHeadlessAsync()`, which:
+  background. It calls `RunHeadlessAsync()`, which is split into small
+  local helper functions (`LoadConfiguration`, `CreateRunLogWriter`,
+  `CreateLogProgress`, `ExecuteUploadAsync`, `AppendRunHistory`,
+  `ResolveRunStatus`) and:
   1. Takes the single-run guard (a file lock, see §7.3) so a scheduled
      run never overlaps a manual run (or another scheduled run).
   2. Loads config/state from disk (same `ConfigStore`/`StateStore` the UI
-     uses).
+     uses) and initializes the localization culture (`Loc.Initialize`, see
+     §4.5) so the log file is written in the user's language.
   3. Runs the actual upload logic via `UploadService.RunAsync(...)` — the
-     **exact same class** the UI's "Run now" button calls (see §6.1). This
+     **exact same class** the UI's "Run now" button calls (see §5). This
      is the key design point: there is only one upload implementation,
      shared between interactive and headless modes.
   4. Writes a timestamped log file to `<AppData>/logs/run-yyyyMMdd-HHmmss.log`
@@ -121,14 +125,20 @@ Avalonia UI branch.
 `App` is the Avalonia equivalent of WPF's `App.xaml`/`App.xaml.cs`. Two
 methods matter:
 
-- `Initialize()` — loads `App.axaml` (just registers the `FluentTheme` and
-  the `DataGrid` theme, see §2). Don't touch unless changing global styles.
+- `Initialize()` — loads `App.axaml` (registers the `FluentTheme`, the
+  `DataGrid` theme and the app-level `NativeMenu`, see §2). Don't touch
+  unless changing global styles.
 - `OnFrameworkInitializationCompleted()` — this is effectively the UI
-  "composition root": it creates `ConfigStore`, loads `AppConfig`, creates
-  `StateStore`/`RunHistoryStore`, builds `MainWindowViewModel` (injecting
-  those dependencies manually — **there is no DI container** in this
-  project, everything is `new`'d up explicitly here), and assigns it as
-  `MainWindow.DataContext`.
+  "composition root": it creates `ConfigStore`, loads `AppConfig`, calls
+  `Loc.Initialize(config.LanguagePreference)` (see §4.5) **before** any
+  window is built, creates `StateStore`/`RunHistoryStore`, builds
+  `MainWindowViewModel` (injecting those dependencies manually — **there is
+  no DI container** in this project, everything is `new`'d up explicitly
+  here), and assigns it as `MainWindow.DataContext`.
+- `AppAbout_OnClick` — handler for the application-level `NativeMenu` item
+  declared in `App.axaml` (the "About" entry that lives in the macOS app
+  menu). It shows `AboutWindow` as a modal dialog owned by the main window
+  (see §4.7).
 
 **If you add a new top-level dependency** (e.g. a new store or service used
 by a ViewModel), wire it up here, in the same place, following the existing
@@ -146,19 +156,27 @@ Config/                    Application settings (AppConfig) + JSON persistence
 Google/                    Everything that talks to Google (OAuth + Photos API + upload logic)
 State/                     Local progress/history persistence (JSON files)
 Scheduling/                OS-native background scheduling (Task Scheduler / launchd)
+Localization/              Translated UI/log strings (.resx) + the XAML markup extension
 
 UI/
   ViewModels/               One ViewModel per tab (+ small support classes), MVVM, no Avalonia types
-  Views/                    One View (.axaml + .axaml.cs) per tab, plus MainWindow
+  Views/                    One View (.axaml + .axaml.cs) per tab, plus MainWindow and the About dialog
 ```
 
 Dependency direction (high level): `UI` → `Google` / `State` / `Config` /
-`Scheduling`. Nothing under `Google`, `State`, `Config`, or `Scheduling`
-references `UI` or Avalonia — those namespaces are plain, UI-framework-free
-C#. That's intentional: it means the whole upload/scheduling/config engine
-is unit-testable and reusable without spinning up any UI, and it's exactly
-why the headless `--run-scheduled` mode can reuse everything with zero
-duplication.
+`Scheduling` / `Localization`. Nothing under `Google`, `State`, `Config`, or
+`Scheduling` references `UI` or Avalonia — those namespaces are plain,
+UI-framework-free C# (they do use `Localization`, which is also
+Avalonia-free except for `TrExtension`). That's intentional: it means the
+whole upload/scheduling/config engine is unit-testable and reusable without
+spinning up any UI, and it's exactly why the headless `--run-scheduled` mode
+can reuse everything with zero duplication.
+
+A note on style: most of the small classes here use **primary constructors**
+(`public class StateStore(string path)`) and the parameter is referenced
+directly instead of copying it into a `_field`. Follow that pattern for new
+plain-dependency classes; keep explicit constructors only when there's real
+initialization logic to run.
 
 ### 4.1 `Config/`
 
@@ -181,7 +199,7 @@ duplication.
 
 | File | Responsibility |
 |---|---|
-| [`AppState.cs`](State/AppState.cs) | Plain data class persisted as `state.json`: album-name → album-id map, uploaded-file-path → media-item-id map, per-file failure counters, permanently-skipped files, and the daily API request counter (`UsageDate`/`UsageCount`). This is what makes runs resumable. |
+| [`AppState.cs`](State/AppState.cs) | Plain data class persisted as `state.json`: album-name → album-id map, uploaded-file-path → media-item-id map, permanently-skipped files, and the daily API request counter (`UsageDate`/`UsageCount`). This is what makes runs resumable. |
 | [`StateStore.cs`](State/StateStore.cs) | Loads/saves `AppState` as `state.json`, same atomic-write pattern as `ConfigStore`. |
 | [`RunHistoryEntry.cs`](State/RunHistoryEntry.cs) | Plain data class for one row in the History tab: start/end time, `RunOrigin` (`Manual`/`Scheduled`), `RunStatus` (`Ok`/`QuotaExceeded`/`Error`/`Cancelled`), counts, error message. |
 | [`RunHistoryStore.cs`](State/RunHistoryStore.cs) | Loads/appends to `run_history.json` (keeps only the most recent 100 entries), same atomic-write pattern. |
@@ -198,25 +216,43 @@ duplication.
 
 ⚠️ Both registrars are only ever instantiated behind an `OperatingSystem.IsWindows()`/`IsMacOS()` check (see `IBackgroundScheduler.Create()` and `ScheduleViewModel`), so the wrong one is never loaded on the wrong OS.
 
-### 4.5 `UI/ViewModels/`
+### 4.5 `Localization/`
+
+Every user-visible string (UI labels **and** run-log lines) comes from a
+`.resx` resource file — there are no hard-coded literals in the Views,
+ViewModels or `UploadService`.
+
+| File | Responsibility |
+|---|---|
+| [`Strings.resx`](Localization/Strings.resx) | The **neutral** resource file, holding the English texts. `<NeutralLanguage>en</NeutralLanguage>` in the `.csproj` declares it as English, so English needs no satellite assembly and is also the fallback for any culture without a translation. |
+| [`Strings.es.resx`](Localization/Strings.es.resx) | Spanish translations. Culture-specific `.resx` files are compiled into **satellite assemblies** (`es/DicresPhotosUploader.resources.dll`); the single-file publish bundles them into the executable, so nothing extra needs to be copied by the build scripts. |
+| [`Loc.cs`](Localization/Loc.cs) | Static facade over a `ResourceManager`. `Loc.Initialize(languagePreference)` resolves the `CultureInfo` once at startup from the `LanguagePreference` setting (`"System"` → `CultureInfo.CurrentUICulture`, otherwise a culture name such as `"es-ES"`, falling back to the system culture if the name is invalid). `Loc.Get(key)` returns the translation (or the key itself if missing), `Loc.Format(key, args)` does a `string.Format` on top of it. |
+| [`TrExtension.cs`](Localization/TrExtension.cs) | Avalonia XAML markup extension used as `{loc:Tr Some_Key}` in `.axaml` files. It resolves the string **at parse time**, which is why changing the language only takes effect after restarting the app (`Config_StatusLanguageChanged` tells the user exactly that). |
+
+`Loc.Initialize` must be called before anything reads a string: the UI does
+it in `App.OnFrameworkInitializationCompleted` (§3.2) and the headless mode
+in `Program.LoadConfiguration` (§3.1). Without it, the invariant culture is
+used, i.e. the neutral English texts.
+
+### 4.6 `UI/ViewModels/`
 
 Each tab in `MainWindow` has one ViewModel, all constructed once in
 `MainWindowViewModel` (which is `MainWindow`'s `DataContext`, see §3.2) and
 exposed as a property (`Dashboard`, `Config`, `Schedule`, `History`) that
 each tab's View binds its own `DataContext` to (see `MainWindow.axaml` in
-§6.1).
+§4.7).
 
 | File | Responsibility |
 |---|---|
 | [`MainWindowViewModel.cs`](UI/ViewModels/MainWindowViewModel.cs) | Root ViewModel. Just instantiates and exposes the 4 tab ViewModels. No logic of its own. |
-| [`DashboardViewModel.cs`](UI/ViewModels/DashboardViewModel.cs) | Backs the Dashboard tab: per-album upload progress (`Albums`), live log lines (`LogLines`), the `RunNowCommand` that calls `UploadService.RunAsync` (same as headless mode), and the `ReprocessErrorsCommand` that calls `UploadService.ReprocessErroredAsync` — both guarded by the same `SingleRunGuard` file lock so they never overlap with each other or a scheduled run. |
-| [`ConfigViewModel.cs`](UI/ViewModels/ConfigViewModel.cs) | Backs the Configuration tab: editable copies of the relevant `AppConfig` fields, `SaveCommand` (persists via `ConfigStore`), and `ReauthorizeAsync` (deletes the token store and re-runs the OAuth flow). |
+| [`DashboardViewModel.cs`](UI/ViewModels/DashboardViewModel.cs) | Backs the Dashboard tab: per-album upload progress (kept in a private `Albums` collection and projected into the bound `FilteredAlbums`, which honours the "show only albums with errors" toggle), live log lines (`LogLines`), the `RunNowCommand` that calls `UploadService.RunAsync` (same as headless mode), and the `ReprocessErrorsCommand` that calls `UploadService.ReprocessErroredAsync` — both guarded by the same `SingleRunGuard` file lock so they never overlap with each other or a scheduled run. |
+| [`ConfigViewModel.cs`](UI/ViewModels/ConfigViewModel.cs) | Backs the Configuration tab: editable copies of the relevant `AppConfig` fields (root/errored folders, batch size, allowed extensions, theme and language preference), `SaveCommand` (persists via `ConfigStore`), and `ReauthorizeAsync` (deletes the token store and re-runs the OAuth flow). Also exposes `IsConfigurationComplete`, which the other tabs bind their `IsEnabled` to: they stay locked until a valid root folder is set and Google has been authorized. |
 | [`ScheduleViewModel.cs`](UI/ViewModels/ScheduleViewModel.cs) | Backs the Schedule tab: day-of-week checkboxes (`Days`, a list of `DayOption`), time picker (`ScheduledTime`), the enable/disable switch, and `SaveAsync` which persists `ScheduleEntries` to config **and** calls `IBackgroundScheduler.RegisterAsync`/`UnregisterAsync`. |
 | [`HistoryViewModel.cs`](UI/ViewModels/HistoryViewModel.cs) | Backs the History tab: just loads and exposes `RunHistoryEntry` items from `RunHistoryStore`, newest first. |
 | [`AlbumProgress.cs`](UI/ViewModels/AlbumProgress.cs) | Small immutable DTO (name + uploaded/total counts) used to populate the Dashboard's album list/grid. Not itself observable — the whole `Albums` collection is replaced/rebuilt instead of mutating individual items. |
 | [`DayOption.cs`](UI/ViewModels/DayOption.cs) | Small observable DTO wrapping a `DayOfWeek` + display label + `IsSelected` checkbox state, used by the Schedule tab's day list. |
 
-### 4.6 `UI/Views/`
+### 4.7 `UI/Views/`
 
 Each View is a `.axaml` (markup) + `.axaml.cs` (code-behind) pair. Code-behind
 is intentionally minimal everywhere:
@@ -225,9 +261,10 @@ is intentionally minimal everywhere:
 |---|---|
 | [`MainWindow.axaml`](UI/Views/MainWindow.axaml) / `.axaml.cs` | The single top-level `Window`. Just a `TabControl` with 4 `TabItem`s, each hosting one of the other Views and binding its `DataContext` to the corresponding property on `MainWindowViewModel` (`{Binding Dashboard}`, etc.). |
 | `DashboardView.axaml` / `.axaml.cs` | "Run now" and "Reprocess errors" buttons, progress list/grid per album (`DataGrid`, from the separate `Avalonia.Controls.DataGrid` package), live scrolling log. |
-| `ConfigView.axaml` / `.axaml.cs` | Form fields bound to `ConfigViewModel`. The code-behind has the **one non-trivial piece of code-behind in the project**: `OnBrowseRootFolder`, which opens Avalonia's native folder picker (`TopLevel.GetTopLevel(this).StorageProvider.OpenFolderPickerAsync(...)`) — this has to be code-behind because it needs a reference to the actual `Window`/`TopLevel`, which a ViewModel must never depend on. |
+| `ConfigView.axaml` / `.axaml.cs` | Form fields bound to `ConfigViewModel`. The code-behind has the **one non-trivial piece of code-behind in the project**: `BrowseFolderAsync`, a single helper shared by the "root folder" and "errored folder" buttons, which opens Avalonia's native folder picker (`TopLevel.GetTopLevel(this).StorageProvider.OpenFolderPickerAsync(...)`) and applies the chosen path to the ViewModel through a callback — this has to be code-behind because it needs a reference to the actual `Window`/`TopLevel`, which a ViewModel must never depend on. |
 | `ScheduleView.axaml` / `.axaml.cs` | Day checkboxes, time picker, enable switch, save button, status text — all bound to `ScheduleViewModel`. |
 | `HistoryView.axaml` / `.axaml.cs` | Read-only `DataGrid`/list bound to `HistoryViewModel.Entries`. |
+| [`AboutWindow.axaml`](UI/Views/AboutWindow.axaml) / `.axaml.cs` | Small modal dialog (no ViewModel — it has no state) opened from the application `NativeMenu` in `App.axaml`. Shows the app icon, the assembly version (`Assembly.GetExecutingAssembly().GetName().Version`, formatted through `Loc.Format("About_Version", ...)`) and two `HyperlinkButton`s that open the repository / product page in the default browser via `Process.Start(new ProcessStartInfo(url) { UseShellExecute = true })`. Failures to launch the browser are swallowed on purpose (best-effort). |
 
 ---
 
@@ -359,7 +396,8 @@ add a new persisted file.**
 Both `DashboardViewModel.RunNowAsync`/`ReprocessErrorsAsync` and
 `Program.RunHeadlessAsync` call `SingleRunGuard.TryAcquire()`
 (`Config/SingleRunGuard.cs`) before doing any work, and dispose the
-returned lock (`using`) when done. This prevents a manual run, a
+returned lock (`await using`, since `FileStream` implements
+`IAsyncDisposable`) when done. This prevents a manual run, a
 "Reprocess errors" run, and a scheduled run from racing on the same
 `state.json`. If you add a **third/fourth** way to trigger an upload, it
 must acquire this same guard the same way.
@@ -398,6 +436,17 @@ and add photos, but cannot read, list, or delete anything already in the
 user's library. Keep this in mind if you're asked to add a "read existing
 albums" feature: it will require adding a broader scope and will force
 every existing user to re-consent.
+
+### 7.6 Localization is resolved once, at startup
+
+`Loc.Initialize` is called exactly once per process (UI: §3.2, headless:
+§3.1) and `TrExtension` resolves `{loc:Tr Key}` when the XAML is parsed.
+Consequence: **switching the language in the Configuration tab does not
+re-render the UI** — the app has to be restarted, which is what the
+`Config_StatusLanguageChanged` message tells the user. Don't add live
+language switching without also replacing `TrExtension` with a binding to
+an observable source, since every already-parsed string would otherwise
+stay in the old language.
 
 ---
 
@@ -472,6 +521,35 @@ Two places, both required:
    constructor.
 4. Add a new `<TabItem>` to `MainWindow.axaml` binding
    `DataContext="{Binding YourTab}"`.
+
+### 8.7 Add or change a user-visible string
+
+1. Add the key + English text to
+   [`Localization/Strings.resx`](Localization/Strings.resx).
+2. Add the **same key** with its translation to every culture file
+   (today just [`Localization/Strings.es.resx`](Localization/Strings.es.resx)).
+   A missing key isn't a build error: `Loc.Get` silently falls back to the
+   neutral text, and to the key name itself if that's missing too.
+3. Use it from XAML with `{loc:Tr Your_Key}` (the `loc` namespace is
+   `xmlns:loc="using:DicresPhotosUploader.Localization"`), or from C# with
+   `Loc.Get("Your_Key")` / `Loc.Format("Your_Key", arg0, arg1)` when the
+   text has `{0}` placeholders.
+
+Never hard-code a literal in a View, ViewModel or in `UploadService`'s log
+lines — the run log is localized too.
+
+### 8.8 Add a new language
+
+1. Copy `Strings.resx` to `Strings.<culture>.resx` (e.g. `Strings.fr.resx`)
+   and translate the values, keeping every `name` untouched. The build picks
+   it up automatically (no `.csproj` change needed) and emits a satellite
+   assembly `<culture>/DicresPhotosUploader.resources.dll`, which the
+   single-file publish bundles into the executable.
+2. Add the option to `ConfigViewModel.LanguageOptions` (key = the culture
+   name passed to `Loc.Initialize`, e.g. `"fr-FR"`; label = a new
+   `Language_*` resource key).
+3. Nothing else: `"System"` already picks the new language automatically
+   when `CultureInfo.CurrentUICulture` matches it.
 
 ---
 

@@ -39,7 +39,6 @@ public partial class ConfigViewModel : ObservableObject
     [ObservableProperty]
     private bool _isAuthorizing;
 
-    /// <summary>True once the saved configuration is complete (root folder set and Google account authorized).</summary>
     [ObservableProperty]
     private bool _isConfigurationComplete;
 
@@ -79,7 +78,6 @@ public partial class ConfigViewModel : ObservableObject
         _isConfigurationComplete = ComputeIsConfigurationComplete();
     }
 
-    /// <summary>A configuration is considered complete when a valid root folder is set and Google has been authorized.</summary>
     private bool ComputeIsConfigurationComplete() =>
         !string.IsNullOrWhiteSpace(_config.RootFolder)
         && Directory.Exists(_config.RootFolder)

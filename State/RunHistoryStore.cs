@@ -6,7 +6,7 @@ namespace DicresPhotosUploader.State;
 /// Stores the run history (max. <see cref="MaxEntries"/>, the oldest ones are discarded).
 /// Same atomic write pattern (temp file + rename) as <see cref="StateStore"/>.
 /// </summary>
-public class RunHistoryStore
+public class RunHistoryStore(string path)
 {
     private const int MaxEntries = 100;
 
@@ -15,21 +15,14 @@ public class RunHistoryStore
         WriteIndented = true
     };
 
-    private readonly string _path;
-
-    public RunHistoryStore(string path)
-    {
-        _path = path;
-    }
-
     public List<RunHistoryEntry> Load()
     {
-        if (!File.Exists(_path))
+        if (!File.Exists(path))
         {
             return new List<RunHistoryEntry>();
         }
 
-        var json = File.ReadAllText(_path);
+        var json = File.ReadAllText(path);
         return JsonSerializer.Deserialize<List<RunHistoryEntry>>(json) ?? new List<RunHistoryEntry>();
     }
 
@@ -44,8 +37,8 @@ public class RunHistoryStore
         }
 
         var json = JsonSerializer.Serialize(entries, JsonOptions);
-        var tmpPath = _path + ".tmp";
+        var tmpPath = path + ".tmp";
         File.WriteAllText(tmpPath, json);
-        File.Move(tmpPath, _path, overwrite: true);
+        File.Move(tmpPath, path, overwrite: true);
     }
 }

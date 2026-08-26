@@ -8,7 +8,7 @@
         Title="Dicres Photos Uploader"
         Icon="avares://DicresPhotosUploader/assets/app.ico"
         Background="{DynamicResource BackgroundBrush}"
-        Width="960" Height="680">
+        Width="960" Height="720">
   <TabControl Margin="16" SelectedIndex="{Binding SelectedTabIndex}">
     <TabItem Header="{loc:Tr Tab_Dashboard}" IsEnabled="{Binding Config.IsConfigurationComplete}">
       <views:DashboardView DataContext="{Binding Dashboard}" />

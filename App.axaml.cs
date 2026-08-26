@@ -17,6 +17,19 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
     }
 
+    private void AppAbout_OnClick(object? sender, System.EventArgs e)
+    {
+        var about = new AboutWindow();
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: { } mainWindow })
+        {
+            about.ShowDialog(mainWindow);
+        }
+        else
+        {
+            about.Show();
+        }
+    }
+
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -40,8 +53,7 @@ public partial class App : Application
 
         base.OnFrameworkInitializationCompleted();
     }
-
-    /// <summary>Switches the app's theme variant ("System", "Light" or "Dark").</summary>
+    
     public static void ApplyTheme(string preference)
     {
         if (Current is null)

@@ -16,28 +16,19 @@ public class BatchItemResult
     public string? ErrorMessage { get; init; }
 }
 
-public class PhotosApiClient
+public class PhotosApiClient(HttpClient http, UserCredential credential)
 {
     private const string BaseUrl = "https://photoslibrary.googleapis.com/v1";
-    private readonly HttpClient _http;
-    private readonly UserCredential _credential;
-
-    public PhotosApiClient(HttpClient http, UserCredential credential)
-    {
-        _http = http;
-        _credential = credential;
-    }
 
     private async Task EnsureAuthHeaderAsync()
     {
-        // Refreshes the access token if it has expired (Google tokens last ~1h).
-        if (_credential.Token.IsStale)
+        if (credential.Token.IsStale)
         {
-            await _credential.RefreshTokenAsync(CancellationToken.None);
+            await credential.RefreshTokenAsync(CancellationToken.None);
         }
 
-        _http.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", _credential.Token.AccessToken);
+        http.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", credential.Token.AccessToken);
     }
 
     private static void ThrowIfQuota(HttpResponseMessage response, string context)
@@ -48,14 +39,13 @@ public class PhotosApiClient
         }
     }
 
-    /// <summary>Creates a new album and returns its id.</summary>
     public async Task<string> CreateAlbumAsync(string title)
     {
         await EnsureAuthHeaderAsync();
 
         var body = JsonSerializer.Serialize(new { album = new { title } });
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        using var response = await _http.PostAsync($"{BaseUrl}/albums", content);
+        using var response = await http.PostAsync($"{BaseUrl}/albums", content);
 
         ThrowIfQuota(response, Loc.Format("Quota_ContextCreateAlbum", title));
         response.EnsureSuccessStatusCode();
@@ -65,10 +55,6 @@ public class PhotosApiClient
         return doc.RootElement.GetProperty("id").GetString()!;
     }
 
-    /// <summary>
-    /// Uploads the raw bytes of a photo/video and returns the "upload token"
-    /// that must later be redeemed in BatchCreateMediaItemsAsync.
-    /// </summary>
     public async Task<string> UploadBytesAsync(string filePath)
     {
         await EnsureAuthHeaderAsync();
@@ -83,7 +69,7 @@ public class PhotosApiClient
         content.Headers.Add("X-Goog-Upload-Protocol", "raw");
         content.Headers.Add("X-Goog-Upload-File-Name", fileName);
 
-        using var response = await _http.PostAsync($"{BaseUrl}/uploads", content);
+        using var response = await http.PostAsync($"{BaseUrl}/uploads", content);
 
         ThrowIfQuota(response, Loc.Format("Quota_ContextUploadFile", fileName));
         response.EnsureSuccessStatusCode();
@@ -91,10 +77,6 @@ public class PhotosApiClient
         return await response.Content.ReadAsStringAsync();
     }
 
-    /// <summary>
-    /// Redeems up to 50 upload tokens and adds them all at once to the given album.
-    /// Returns the individual result of each file (success or reason for failure).
-    /// </summary>
     public async Task<List<BatchItemResult>> BatchCreateMediaItemsAsync(
         string albumId,
         List<(string FilePath, string UploadToken)> items)
@@ -113,7 +95,7 @@ public class PhotosApiClient
 
         var json = JsonSerializer.Serialize(requestBody, JsonOpts);
         using var content = new StringContent(json, Encoding.UTF8, "application/json");
-        using var response = await _http.PostAsync($"{BaseUrl}/mediaItems:batchCreate", content);
+        using var response = await http.PostAsync($"{BaseUrl}/mediaItems:batchCreate", content);
 
         ThrowIfQuota(response, Loc.Get("Quota_ContextConfirmBatch"));
         response.EnsureSuccessStatusCode();
@@ -156,8 +138,6 @@ public class PhotosApiClient
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
-
-    // --- Minimal models to (de)serialize the batchCreate JSON ---
 
     private class BatchCreateRequest
     {

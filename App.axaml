@@ -1,7 +1,14 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DicresPhotosUploader.App"
+             Name="DPU"
              RequestedThemeVariant="Default">
+  <NativeMenu.Menu>
+    <NativeMenu>
+      <NativeMenuItem Header="About DPU" Click="AppAbout_OnClick" />
+    </NativeMenu>
+  </NativeMenu.Menu>
+
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.ThemeDictionaries>

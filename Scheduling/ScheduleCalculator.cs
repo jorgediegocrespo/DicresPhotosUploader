@@ -1,6 +1,5 @@
 namespace DicresPhotosUploader.Scheduling;
 
-/// <summary>Calculates the next local date/time a set of time slots should trigger.</summary>
 public static class ScheduleCalculator
 {
     public static DateTime? GetNextOccurrence(IReadOnlyList<ScheduleEntry> entries, DateTime? fromLocal = null)

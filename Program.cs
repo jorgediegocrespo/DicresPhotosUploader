@@ -3,7 +3,6 @@ using DicresPhotosUploader.Config;
 using DicresPhotosUploader.Google;
 using DicresPhotosUploader.Localization;
 using DicresPhotosUploader.State;
-using DicresPhotosUploader.UI.ViewModels;
 
 if (args.Contains("--run-scheduled"))
 {
@@ -22,45 +21,80 @@ static AppBuilder BuildAvaloniaApp() =>
 // Mode invoked by Windows Task Scheduler / macOS launchd: no window, runs and exits.
 static async Task<int> RunHeadlessAsync()
 {
-    using var gate = SingleRunGuard.TryAcquire();
+    await using var gate = SingleRunGuard.TryAcquire();
     if (gate is null)
     {
-        return 0; // a run is already in progress (manual or scheduled): exit without doing anything.
+        // a run is already in progress (manual or scheduled): exit without doing anything.
+        return 0;
     }
 
-    Directory.CreateDirectory(AppConfig.AppDataFolder);
+    var config = LoadConfiguration();
 
-    var configStore = new ConfigStore();
-    var config = configStore.Load();
-
-    Loc.Initialize(config.LanguagePreference);
-
-    var logsDir = Path.Combine(AppConfig.AppDataFolder, "logs");
-    Directory.CreateDirectory(logsDir);
-    var logPath = Path.Combine(logsDir, $"run-{DateTime.Now:yyyyMMdd-HHmmss}.log");
-
-    await using var logWriter = new StreamWriter(logPath, append: false) { AutoFlush = true };
-    var progress = new Progress<string>(line => logWriter.WriteLine($"[{DateTime.Now:HH:mm:ss}] {line}"));
-
-    var stateStore = new StateStore(config.StateFilePath);
-    var state = stateStore.Load();
-    var historyStore = new RunHistoryStore(config.RunHistoryFilePath);
+    await using var logWriter = CreateRunLogWriter();
+    var progress = CreateLogProgress(logWriter);
 
     var startedUtc = DateTime.UtcNow;
-    var summary = await new UploadService().RunAsync(config, stateStore, state, progress, CancellationToken.None);
+    var summary = await ExecuteUploadAsync(config, progress);
+    AppendRunHistory(config, summary, startedUtc);
+
+    return summary.Success ? 0 : 1;
+}
+
+static AppConfig LoadConfiguration()
+{
+    Directory.CreateDirectory(AppConfig.AppDataFolder);
+
+    var config = new ConfigStore().Load();
+    Loc.Initialize(config.LanguagePreference);
+
+    return config;
+}
+
+static StreamWriter CreateRunLogWriter()
+{
+    var logsDir = Path.Combine(AppConfig.AppDataFolder, "logs");
+    Directory.CreateDirectory(logsDir);
+
+    var logPath = Path.Combine(logsDir, $"run-{DateTime.Now:yyyyMMdd-HHmmss}.log");
+
+    return new StreamWriter(logPath, append: false) { AutoFlush = true };
+}
+
+static IProgress<string> CreateLogProgress(TextWriter logWriter) =>
+    new Progress<string>(line => logWriter.WriteLine($"[{DateTime.Now:HH:mm:ss}] {line}"));
+
+static async Task<UploadRunSummary> ExecuteUploadAsync(AppConfig config, IProgress<string> progress)
+{
+    var stateStore = new StateStore(config.StateFilePath);
+    var state = stateStore.Load();
+
+    return await new UploadService().RunAsync(config, stateStore, state, progress, CancellationToken.None);
+}
+
+static void AppendRunHistory(AppConfig config, UploadRunSummary summary, DateTime startedUtc)
+{
+    var historyStore = new RunHistoryStore(config.RunHistoryFilePath);
 
     historyStore.Append(new RunHistoryEntry
     {
         StartedUtc = startedUtc,
         FinishedUtc = DateTime.UtcNow,
         Origin = RunOrigin.Scheduled,
-        Status = summary.QuotaExceeded ? RunStatus.QuotaExceeded : (summary.Success ? RunStatus.Ok : RunStatus.Error),
+        Status = ResolveRunStatus(summary),
         UploadedThisRun = summary.UploadedThisRun,
         UploadedFilesTotal = summary.UploadedFilesTotal,
         SkippedFilesTotal = summary.SkippedFilesTotal,
         ErrorMessage = summary.ErrorMessage
     });
+}
 
-    return summary.Success ? 0 : 1;
+static RunStatus ResolveRunStatus(UploadRunSummary summary)
+{
+    if (summary.QuotaExceeded)
+    {
+        return RunStatus.QuotaExceeded;
+    }
+
+    return summary.Success ? RunStatus.Ok : RunStatus.Error;
 }
 

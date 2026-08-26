@@ -6,7 +6,7 @@ namespace DicresPhotosUploader.Config;
 /// Loads and saves <see cref="AppConfig"/> in <c>config.json</c> inside <see cref="AppConfig.AppDataFolder"/>.
 /// Same atomic write pattern (temp file + rename) as the rest of the stores.
 /// </summary>
-public class ConfigStore
+public class ConfigStore(string? path = null)
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -14,12 +14,7 @@ public class ConfigStore
         PropertyNameCaseInsensitive = true
     };
 
-    private readonly string _path;
-
-    public ConfigStore(string? path = null)
-    {
-        _path = path ?? Path.Combine(AppConfig.AppDataFolder, "config.json");
-    }
+    private readonly string _path = path ?? Path.Combine(AppConfig.AppDataFolder, "config.json");
 
     public AppConfig Load()
     {

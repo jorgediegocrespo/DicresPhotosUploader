@@ -29,7 +29,7 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty]
     private string _historicalTotalText = "";
 
-    public ObservableCollection<AlbumProgress> Albums { get; } = new();
+    private ObservableCollection<AlbumProgress> Albums { get; } = new();
 
     public ObservableCollection<AlbumProgress> FilteredAlbums { get; } = new();
 
@@ -66,7 +66,7 @@ public partial class DashboardViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanRunNow))]
     private async Task RunNowAsync()
     {
-        using var gate = SingleRunGuard.TryAcquire();
+        await using var gate = SingleRunGuard.TryAcquire();
         if (gate is null)
         {
             LogLines.Add(Loc.Get("Dashboard_RunInProgress"));

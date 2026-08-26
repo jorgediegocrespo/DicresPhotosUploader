@@ -2,11 +2,11 @@ using Avalonia.Markup.Xaml;
 
 namespace DicresPhotosUploader.Localization;
 
-/// <summary>XAML markup extension that resolves a translated string at parse time: {loc:Tr SomeKey}.</summary>
 public class TrExtension : MarkupExtension
 {
-    public string Key { get; set; }
+    private string Key { get; set; }
 
+    // TODO: Remove
     public TrExtension()
     {
         Key = string.Empty;

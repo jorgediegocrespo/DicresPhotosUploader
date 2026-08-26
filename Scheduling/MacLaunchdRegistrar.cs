@@ -6,7 +6,6 @@ using DicresPhotosUploader.Config;
 
 namespace DicresPhotosUploader.Scheduling;
 
-/// <summary>Creates/removes a user LaunchAgent with a StartCalendarInterval per time slot.</summary>
 [SupportedOSPlatform("macos")]
 public partial class MacLaunchdRegistrar : IBackgroundScheduler
 {

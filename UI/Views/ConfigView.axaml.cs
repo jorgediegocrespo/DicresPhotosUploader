@@ -14,29 +14,15 @@ public partial class ConfigView : UserControl
 
     private async void OnBrowseRootFolder(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        if (DataContext is not ConfigViewModel vm)
-        {
-            return;
-        }
-
-        var topLevel = TopLevel.GetTopLevel(this);
-        if (topLevel is null)
-        {
-            return;
-        }
-
-        var folders = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
-        {
-            Title = Loc.Get("Picker_SelectRootFolder")
-        });
-
-        if (folders.Count > 0)
-        {
-            vm.RootFolder = folders[0].Path.LocalPath;
-        }
+        await BrowseFolderAsync("Picker_SelectRootFolder", (vm, path) => vm.RootFolder = path);
     }
 
     private async void OnBrowseErroredFolder(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        await BrowseFolderAsync("Picker_SelectErroredFolder", (vm, path) => vm.ErroredFolderPath = path);
+    }
+
+    private async Task BrowseFolderAsync(string titleKey, Action<ConfigViewModel, string> applyFolder)
     {
         if (DataContext is not ConfigViewModel vm)
         {
@@ -51,12 +37,12 @@ public partial class ConfigView : UserControl
 
         var folders = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
         {
-            Title = Loc.Get("Picker_SelectErroredFolder")
+            Title = Loc.Get(titleKey)
         });
 
         if (folders.Count > 0)
         {
-            vm.ErroredFolderPath = folders[0].Path.LocalPath;
+            applyFolder(vm, folders[0].Path.LocalPath);
         }
     }
 }

@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>DicresPhotosUploader</RootNamespace>
+    <!-- Strings.resx holds the English texts; Strings.<culture>.resx ship as satellite assemblies. -->
+    <NeutralLanguage>en</NeutralLanguage>
     <AssemblyTitle>Dicres Photos Uploader</AssemblyTitle>
     <Product>Dicres Photos Uploader</Product>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
@@ -16,6 +18,7 @@
 
   <ItemGroup>
     <AvaloniaResource Include="assets/app.ico" />
+    <AvaloniaResource Include="assets/icon.png" />
   </ItemGroup>
 
   <ItemGroup>

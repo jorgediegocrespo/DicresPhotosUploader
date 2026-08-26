@@ -4,10 +4,6 @@ namespace DicresPhotosUploader.Config;
 
 public class AppConfig
 {
-    /// <summary>
-    /// Folder where all the app's configuration/state lives
-    /// (%APPDATA%/DicresPhotosUploader on Windows, ~/Library/Application Support/DicresPhotosUploader on macOS).
-    /// </summary>
     public static string AppDataFolder { get; } = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "DicresPhotosUploader");

@@ -4,7 +4,6 @@ using Task = System.Threading.Tasks.Task;
 
 namespace DicresPhotosUploader.Scheduling;
 
-/// <summary>Creates/updates a task in the Windows Task Scheduler (one per time slot).</summary>
 [SupportedOSPlatform("windows")]
 public class WindowsTaskSchedulerRegistrar : IBackgroundScheduler
 {
