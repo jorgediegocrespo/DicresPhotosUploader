@@ -170,4 +170,4 @@ This repository includes a GitHub Actions workflow at
 Release on every push to the `master` branch.
 
 Each release gets an auto-generated tag in this format:
-`release-<run_number>-<run_attempt>-<short_sha>`.
+`release-<run_number>-<short_sha>`.

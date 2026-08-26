@@ -18,7 +18,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           short_sha="${GITHUB_SHA::7}"
-          tag="release-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}-${short_sha}"
+          tag="release-${GITHUB_RUN_NUMBER}-${short_sha}"
+
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release '$tag' already exists. Skipping."
+            exit 0
+          fi
 
           gh release create "$tag" \
             --target "$GITHUB_SHA" \
