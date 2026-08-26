@@ -13,8 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create GitHub release
+        shell: bash
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           short_sha="${GITHUB_SHA::7}"
           tag="release-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}-${short_sha}"
