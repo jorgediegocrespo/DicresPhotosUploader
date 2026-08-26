@@ -17,6 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DicresPhotosUploader.Tests/**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <AvaloniaResource Include="assets/app.ico" />
     <AvaloniaResource Include="assets/icon.png" />
   </ItemGroup>
