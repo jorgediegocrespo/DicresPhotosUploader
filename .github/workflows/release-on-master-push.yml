@@ -17,6 +17,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           short_sha="${GITHUB_SHA::7}"
           tag="release-${GITHUB_RUN_NUMBER}-${short_sha}"
 
