@@ -557,7 +557,7 @@ lines — the run log is localized too.
 
 - [`README.md`](README.md) — end-user setup instructions (Google Cloud
   OAuth setup, running, publishing).
-- [`DicresPhotosUploader.csproj`](DicresPhotosUploader.csproj) — target
+- [`src/DicresPhotosUploader/DicresPhotosUploader.csproj`](src/DicresPhotosUploader/DicresPhotosUploader.csproj) — target
   framework, all NuGet dependencies with short comments on why each is
   there.
 - [`scripts/build-macos-app.sh`](scripts/build-macos-app.sh) /

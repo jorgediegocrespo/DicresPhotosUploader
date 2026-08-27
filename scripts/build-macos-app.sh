@@ -14,7 +14,7 @@ rm -rf "$OUT_DIR"
 
 for RID in "${RIDS[@]}"; do
   echo "== Publicando $RID =="
-  dotnet publish -c Release -r "$RID" --self-contained true \
+  dotnet publish src/DicresPhotosUploader/DicresPhotosUploader.csproj -c Release -r "$RID" --self-contained true \
     -p:PublishSingleFile=true \
     -p:IncludeNativeLibrariesForSelfExtract=true \
     -o "$OUT_DIR/$RID-publish"
@@ -24,7 +24,7 @@ for RID in "${RIDS[@]}"; do
 
   cp "$OUT_DIR/$RID-publish/$APP_NAME" "$APP_DIR/Contents/MacOS/$APP_NAME"
   chmod +x "$APP_DIR/Contents/MacOS/$APP_NAME"
-  cp "assets/AppIcon.icns" "$APP_DIR/Contents/Resources/AppIcon.icns"
+  cp "src/DicresPhotosUploader/assets/AppIcon.icns" "$APP_DIR/Contents/Resources/AppIcon.icns"
 
   cat > "$APP_DIR/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>

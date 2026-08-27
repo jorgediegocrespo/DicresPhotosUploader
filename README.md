@@ -53,7 +53,7 @@ No need to touch anything by hand: it's all managed from the interface itself.
 ## 4. Running in development
 
 ```bash
-dotnet run
+dotnet run --project src/DicresPhotosUploader
 ```
 
 This opens the window with 4 tabs:

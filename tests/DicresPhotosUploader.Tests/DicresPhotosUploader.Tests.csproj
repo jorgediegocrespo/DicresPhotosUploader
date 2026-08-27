@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DicresPhotosUploader.csproj" />
+    <ProjectReference Include="..\..\src\DicresPhotosUploader\DicresPhotosUploader.csproj" />
   </ItemGroup>
 
 </Project>
