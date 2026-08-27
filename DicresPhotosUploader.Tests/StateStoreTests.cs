@@ -4,7 +4,7 @@ namespace DicresPhotosUploader.Tests;
 
 public class StateStoreTests : IDisposable
 {
-    private readonly string _tempPath = Path.GetTempFileName();
+    private readonly string _tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
     [Fact]
     public void Load_MissingFile_ReturnsEmptyState()
