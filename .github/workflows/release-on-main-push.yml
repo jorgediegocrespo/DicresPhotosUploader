@@ -1,9 +1,9 @@
-name: Release on master push
+name: Release on main push
 
 on:
   push:
     branches:
-      - master
+      - main
 
 permissions:
   contents: write

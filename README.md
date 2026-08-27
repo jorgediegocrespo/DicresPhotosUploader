@@ -163,11 +163,11 @@ so subfolders inside subfolders are not processed).
 - Don't delete the app's data folder (see item 3) between runs or
   you'll lose your session/progress.
 
-## 10. Automatic releases on `master`
+## 10. Automatic releases on `main`
 
 This repository includes a GitHub Actions workflow at
-`.github/workflows/release-on-master-push.yml` that creates a new GitHub
-Release on every push to the `master` branch.
+`.github/workflows/release-on-main-push.yml` that creates a new GitHub
+Release on every push to the `main` branch.
 
 Each release gets an auto-generated tag in this format:
 `release-<run_number>-<short_sha>`.
