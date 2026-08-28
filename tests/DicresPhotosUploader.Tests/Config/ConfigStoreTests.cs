@@ -1,7 +1,7 @@
 using DicresPhotosUploader.Config;
 using DicresPhotosUploader.Scheduling;
 
-namespace DicresPhotosUploader.Tests;
+namespace DicresPhotosUploader.Tests.Config;
 
 public class ConfigStoreTests : IDisposable
 {

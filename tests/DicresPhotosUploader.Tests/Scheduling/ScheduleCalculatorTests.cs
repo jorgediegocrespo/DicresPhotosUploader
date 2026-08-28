@@ -1,10 +1,9 @@
 using DicresPhotosUploader.Scheduling;
 
-namespace DicresPhotosUploader.Tests;
+namespace DicresPhotosUploader.Tests.Scheduling;
 
 public class ScheduleCalculatorTests
 {
-    // Monday 2025-01-06 10:30:00
     private static readonly DateTime Monday1030 = new(2025, 1, 6, 10, 30, 0);
 
     [Fact]

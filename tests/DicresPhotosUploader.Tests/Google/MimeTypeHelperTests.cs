@@ -1,6 +1,6 @@
 using DicresPhotosUploader.Google;
 
-namespace DicresPhotosUploader.Tests;
+namespace DicresPhotosUploader.Tests.Google;
 
 public class MimeTypeHelperTests
 {

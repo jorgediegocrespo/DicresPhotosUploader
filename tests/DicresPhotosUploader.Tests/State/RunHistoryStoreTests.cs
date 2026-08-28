@@ -1,6 +1,6 @@
 using DicresPhotosUploader.State;
 
-namespace DicresPhotosUploader.Tests;
+namespace DicresPhotosUploader.Tests.State;
 
 public class RunHistoryStoreTests : IDisposable
 {
