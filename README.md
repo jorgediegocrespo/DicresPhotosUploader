@@ -53,7 +53,7 @@ No need to touch anything by hand: it's all managed from the interface itself.
 ## 4. Running in development
 
 ```bash
-dotnet run
+dotnet run --project src/DicresPhotosUploader
 ```
 
 This opens the window with 4 tabs:
@@ -171,3 +171,19 @@ Release on every push to the `main` branch.
 
 Each release gets an auto-generated tag in this format:
 `release-<run_number>-<short_sha>`.
+
+## 11. Tests are required to merge a pull request
+
+The workflow at `.github/workflows/tests-on-pull-request.yml` (job name
+`Run tests`) restores, builds and runs the xUnit test suite on every pull
+request targeting `main` and on every push to `main`.
+
+The `main` branch is protected and `Run tests` is configured as a required
+status check, so a pull request cannot be merged until the whole test suite
+passes. Branches must also be up to date with `main` before merging.
+
+Run the same checks locally with:
+
+```bash
+dotnet test DicresPhotosUploader.slnx --configuration Release
+```

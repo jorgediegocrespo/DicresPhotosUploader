@@ -7,7 +7,7 @@ Set-Location (Join-Path $PSScriptRoot "..")
 $outDir = "dist/windows"
 Remove-Item -Recurse -Force $outDir -ErrorAction SilentlyContinue
 
-dotnet publish -c Release -r win-x64 --self-contained true `
+dotnet publish src/DicresPhotosUploader/DicresPhotosUploader.csproj -c Release -r win-x64 --self-contained true `
   -p:PublishSingleFile=true `
   -p:IncludeNativeLibrariesForSelfExtract=true `
   -o $outDir

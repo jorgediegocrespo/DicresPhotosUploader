@@ -1,0 +1,31 @@
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore DicresPhotosUploader.slnx
+
+      - name: Build
+        run: dotnet build DicresPhotosUploader.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test tests/DicresPhotosUploader.Tests/DicresPhotosUploader.Tests.csproj --configuration Release --no-build --verbosity normal
