@@ -96,6 +96,19 @@ executables (they don't require .NET to be installed on the target machine).
   The app is not signed (there's no Apple Developer account): the first
   time, right-click → **Open** to bypass the Gatekeeper warning.
 
+  **If you downloaded the `.app` from a GitHub Release** (instead of building
+  it locally), macOS marks it as quarantined because it came from the
+  internet, and since it's unsigned, Gatekeeper shows a misleading
+  **"...is damaged and can't be opened"** error instead of the usual
+  "unidentified developer" warning. To fix it, after extracting the
+  `.tar.gz`, remove the quarantine attribute from a terminal:
+
+  ```sh
+  xattr -cr DicresPhotosUploader.app
+  ```
+
+  Then open it normally (or right-click → **Open** the first time).
+
 Important: save the schedule (Schedule tab) **after** moving the app to its
 final location, because the scheduled task points to the executable's path
 at the time it's saved.
@@ -166,11 +179,16 @@ so subfolders inside subfolders are not processed).
 ## 10. Automatic releases on `main`
 
 This repository includes a GitHub Actions workflow at
-`.github/workflows/release-on-main-push.yml` that creates a new GitHub
-Release on every push to the `main` branch.
+`.github/workflows/release-on-main-push.yml` that, on every push to the
+`main` branch:
 
-Each release gets an auto-generated tag in this format:
-`release-<run_number>-<short_sha>`.
+1. Creates a new GitHub Release with an auto-generated tag in the format
+   `yy.ddd.n` (2-digit year, day of the year, and a sequential number that
+   only increases if there's more than one release the same day).
+2. Builds the macOS `.app` bundles and the Windows `.exe` and attaches them
+   to that release as downloadable assets (`*.app.tar.gz` for macOS,
+   `DicresPhotosUploader.exe` for Windows) — see the note about `xattr` in
+   section 5 if macOS refuses to open the downloaded `.app`.
 
 ## 11. Tests are required to merge a pull request
 
