@@ -190,6 +190,14 @@ This repository includes a GitHub Actions workflow at
    `DicresPhotosUploader.exe` for Windows) — see the note about `xattr` in
    section 5 if macOS refuses to open the downloaded `.app`.
 
+Before publishing a release, add a repository Actions secret named
+`GOOGLE_OAUTH_CLIENT_SECRET_JSON` in **Settings → Secrets and variables →
+Actions**. Its value must be the complete contents of the Google Desktop OAuth
+JSON downloaded in section 2. The release workflow restores this ignored file
+only while building, so the OAuth resource is embedded in both published apps
+without committing the credentials file to the repository. The workflow fails
+explicitly if the secret has not been configured.
+
 ## 11. Tests are required to merge a pull request
 
 The workflow at `.github/workflows/tests-on-pull-request.yml` (job name
