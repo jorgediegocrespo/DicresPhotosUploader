@@ -11,23 +11,86 @@ permissions:
 jobs:
   create-release:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
     steps:
       - name: Create GitHub release
+        id: release
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          short_sha="${GITHUB_SHA::7}"
-          tag="release-${GITHUB_RUN_NUMBER}-${short_sha}"
+          year="$(date -u +%y)"
+          day_of_year="$(date -u +%j)"
+          prefix="${year}.${day_of_year}."
 
-          if gh release view "$tag" >/dev/null 2>&1; then
-            echo "Release '$tag' already exists. Skipping."
-            exit 0
-          fi
+          existing_tags="$(gh release list --limit 1000 --json tagName --jq '.[].tagName' | grep -c "^${prefix}" || true)"
+          order=$((existing_tags + 1))
+          tag="${prefix}${order}"
 
           gh release create "$tag" \
             --target "$GITHUB_SHA" \
             --title "$tag" \
             --generate-notes
+
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+  build-macos:
+    needs: create-release
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Build macOS app bundles
+        run: |
+          chmod +x scripts/build-macos-app.sh
+          ./scripts/build-macos-app.sh
+
+      - name: Zip .app bundles
+        run: |
+          cd dist/macos
+          for dir in */; do
+            rid="${dir%/}"
+            app_path="$rid/DicresPhotosUploader.app"
+            if [ -d "$app_path" ]; then
+              zip -r -y "DicresPhotosUploader-$rid.zip" "$app_path"
+            fi
+          done
+
+      - name: Upload macOS assets to release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release upload "${{ needs.create-release.outputs.tag }}" dist/macos/*.zip --clobber
+
+  build-windows:
+    needs: create-release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Build Windows exe
+        shell: pwsh
+        run: ./scripts/build-windows-exe.ps1
+
+      - name: Upload Windows asset to release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release upload "${{ needs.create-release.outputs.tag }}" dist/windows/DicresPhotosUploader.exe --clobber
