@@ -53,14 +53,14 @@ jobs:
           chmod +x scripts/build-macos-app.sh
           ./scripts/build-macos-app.sh
 
-      - name: Zip .app bundles
+      - name: Package .app bundles as tar.gz
         run: |
           cd dist/macos
           for dir in */; do
             rid="${dir%/}"
             app_path="$rid/DicresPhotosUploader.app"
             if [ -d "$app_path" ]; then
-              zip -r -y "DicresPhotosUploader-$rid.zip" "$app_path"
+              tar -czf "DicresPhotosUploader-$rid.app.tar.gz" -C "$rid" "DicresPhotosUploader.app"
             fi
           done
 
@@ -70,7 +70,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          gh release upload "${{ needs.create-release.outputs.tag }}" dist/macos/*.zip --clobber
+          gh release upload "${{ needs.create-release.outputs.tag }}" dist/macos/*.tar.gz --clobber
 
   build-windows:
     needs: create-release
