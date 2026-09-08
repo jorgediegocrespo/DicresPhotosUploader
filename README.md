@@ -16,6 +16,19 @@ on each run, without re-uploading anything already uploaded.
 > [ARCHITECTURE.md](ARCHITECTURE.md) for a full explanation of the project
 > structure, entry point, and what each class does.
 
+## Project governance
+
+This project has one maintainer, [@jorgediegocrespo](https://github.com/jorgediegocrespo),
+who holds all project roles:
+
+| Role | Responsible |
+| --- | --- |
+| Author | @jorgediegocrespo |
+| Reviewer | @jorgediegocrespo |
+| Approver | @jorgediegocrespo |
+
+All requests for signature are approved by the sole maintainer.
+
 ## 1. Requirements
 
 - **.NET 10 SDK**. Check with `dotnet --version` (it should show 10.x). If
@@ -112,6 +125,10 @@ executables (they don't require .NET to be installed on the target machine).
 Important: save the schedule (Schedule tab) **after** moving the app to its
 final location, because the scheduled task points to the executable's path
 at the time it's saved.
+
+## Code signing policy
+
+Free code signing provided by SignPath.io, certificate by SignPath Foundation
 
 ## 6. Notes about background execution
 
