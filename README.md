@@ -213,3 +213,7 @@ Run the same checks locally with:
 ```bash
 dotnet test DicresPhotosUploader.slnx --configuration Release
 ```
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
