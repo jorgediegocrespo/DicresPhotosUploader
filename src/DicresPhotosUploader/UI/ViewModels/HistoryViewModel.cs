@@ -16,6 +16,10 @@ public class RunHistoryRow
     public int SkippedFilesTotal { get; init; }
     public int UploadedFilesTotal { get; init; }
     public string? ErrorMessage { get; init; }
+
+    public string UploadedThisRunText => Loc.FormatNumber(UploadedThisRun);
+    public string SkippedFilesTotalText => Loc.FormatNumber(SkippedFilesTotal);
+    public string UploadedFilesTotalText => Loc.FormatNumber(UploadedFilesTotal);
 }
 
 public partial class HistoryViewModel : ObservableObject

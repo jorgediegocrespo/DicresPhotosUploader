@@ -14,9 +14,9 @@
             <DataGridTextColumn Header="{loc:Tr History_ColStarted}" Binding="{Binding Started}" />
             <DataGridTextColumn Header="{loc:Tr History_ColOrigin}" Binding="{Binding Origin}" />
             <DataGridTextColumn Header="{loc:Tr History_ColStatus}" Binding="{Binding Status}" />
-            <DataGridTextColumn Header="{loc:Tr History_ColUploaded}" Binding="{Binding UploadedThisRun}" />
-            <DataGridTextColumn Header="{loc:Tr History_ColDiscarded}" Binding="{Binding SkippedFilesTotal}" />
-            <DataGridTextColumn Header="{loc:Tr History_ColHistorical}" Binding="{Binding UploadedFilesTotal}" />
+            <DataGridTextColumn Header="{loc:Tr History_ColUploaded}" Binding="{Binding UploadedThisRunText}" />
+            <DataGridTextColumn Header="{loc:Tr History_ColDiscarded}" Binding="{Binding SkippedFilesTotalText}" />
+            <DataGridTextColumn Header="{loc:Tr History_ColHistorical}" Binding="{Binding UploadedFilesTotalText}" />
             <DataGridTextColumn Header="{loc:Tr History_ColError}" Binding="{Binding ErrorMessage}" />
           </DataGrid.Columns>
         </DataGrid>
