@@ -1,5 +1,6 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:DicresPhotosUploader.UI.Controls"
              x:Class="DicresPhotosUploader.App"
              Name="DPU"
              RequestedThemeVariant="Default">
@@ -129,7 +130,7 @@
     </Style>
 
     <!-- Buttons -->
-    <Style Selector="Button">
+    <Style Selector=":is(Button)">
       <Setter Property="CornerRadius" Value="8" />
       <Setter Property="Padding" Value="14,8" />
       <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
@@ -137,26 +138,109 @@
       <Setter Property="BorderThickness" Value="1" />
       <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
     </Style>
-    <Style Selector="Button:pointerover">
+    <Style Selector=":is(Button):pointerover">
       <Setter Property="Background" Value="{DynamicResource PrimaryLightBrush}" />
     </Style>
-    <Style Selector="Button.Primary">
+    <Style Selector=":is(Button).Primary">
       <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
       <Setter Property="Foreground" Value="White" />
       <Setter Property="BorderThickness" Value="0" />
       <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
-    <Style Selector="Button.Primary:pointerover">
+    <Style Selector=":is(Button).Primary:pointerover">
       <Setter Property="Background" Value="{DynamicResource PrimaryDarkBrush}" />
     </Style>
-    <Style Selector="Button.Secondary">
+    <Style Selector=":is(Button).Secondary">
       <Setter Property="Background" Value="{DynamicResource SecondaryBrush}" />
       <Setter Property="Foreground" Value="White" />
       <Setter Property="BorderThickness" Value="0" />
       <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
-    <Style Selector="Button.Secondary:pointerover">
+    <Style Selector=":is(Button).Secondary:pointerover">
       <Setter Property="Background" Value="{DynamicResource SecondaryDarkBrush}" />
+    </Style>
+
+    <Style Selector="CheckBox">
+      <Setter Property="FocusAdorner" Value="{x:Null}" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="CheckBox /template/ Border#PART_Border">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="CheckBox:pointerover /template/ Border#PART_Border">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="CheckBox:checked /template/ Border#PART_Border">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <!-- Button with an embedded activity indicator, shown while its action is running -->
+    <Style Selector="controls|LoadingButton">
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Border x:Name="PART_Root"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  Padding="{TemplateBinding Padding}">
+            <Panel>
+              <!-- Kept in the tree while busy (only transparent) so the button keeps its size -->
+              <ContentPresenter x:Name="PART_ContentPresenter"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+              <Border x:Name="PART_Spinner"
+                      Width="16" Height="16"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                      IsVisible="{Binding IsSpinnerVisible, RelativeSource={RelativeSource TemplatedParent}}"
+                      BorderThickness="2"
+                      BorderBrush="{TemplateBinding Foreground}"
+                      CornerRadius="8"
+                      Opacity="0.35" />
+              <Arc x:Name="PART_SpinnerArc"
+                   Width="16" Height="16"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   IsVisible="{Binding IsSpinnerVisible, RelativeSource={RelativeSource TemplatedParent}}"
+                   Stroke="{TemplateBinding Foreground}"
+                   StrokeThickness="2"
+                   StrokeLineCap="Round"
+                   StartAngle="0" SweepAngle="110"
+                   RenderTransformOrigin="50%,50%"
+                   RenderTransform="rotate(0deg)" />
+            </Panel>
+          </Border>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="controls|LoadingButton:busy /template/ Arc#PART_SpinnerArc">
+      <Style.Animations>
+        <Animation Duration="0:0:1" IterationCount="Infinite">
+          <KeyFrame Cue="0%">
+            <Setter Property="RotateTransform.Angle" Value="0" />
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="RotateTransform.Angle" Value="360" />
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+    <!-- Busy keeps full opacity so the spinner stays readable, unlike a plain disabled button -->
+    <Style Selector="controls|LoadingButton:disabled">
+      <Setter Property="Opacity" Value="0.55" />
+    </Style>
+    <Style Selector="controls|LoadingButton:busy">
+      <Setter Property="Opacity" Value="1" />
+    </Style>
+    <Style Selector="controls|LoadingButton:busy /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Opacity" Value="0" />
     </Style>
 
     <!-- Inputs -->

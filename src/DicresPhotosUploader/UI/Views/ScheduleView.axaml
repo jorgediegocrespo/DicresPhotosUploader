@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:DicresPhotosUploader.UI.ViewModels"
              xmlns:loc="using:DicresPhotosUploader.Localization"
+             xmlns:controls="using:DicresPhotosUploader.UI.Controls"
              x:Class="DicresPhotosUploader.UI.Views.ScheduleView"
              x:DataType="vm:ScheduleViewModel">
   <ScrollViewer Margin="16">
@@ -26,7 +27,7 @@
 
         <CheckBox Content="{loc:Tr Schedule_EnableBackground}" IsChecked="{Binding BackgroundScheduleEnabled}" />
 
-        <Button Content="{loc:Tr Schedule_SaveSchedule}" Classes="Primary" Command="{Binding SaveCommand}" HorizontalAlignment="Left" />
+        <controls:LoadingButton Content="{loc:Tr Schedule_SaveSchedule}" Classes="Primary" Command="{Binding SaveCommand}" HorizontalAlignment="Left" />
 
         <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}" />
 

@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:DicresPhotosUploader.UI.ViewModels"
              xmlns:loc="using:DicresPhotosUploader.Localization"
+             xmlns:controls="using:DicresPhotosUploader.UI.Controls"
              x:Class="DicresPhotosUploader.UI.Views.DashboardView"
              x:DataType="vm:DashboardViewModel">
   <Grid Margin="16" ColumnDefinitions="2*,3*" RowDefinitions="Auto,*">
@@ -11,8 +12,8 @@
         <TextBlock Text="{Binding HistoricalTotalText}"
                    Foreground="{DynamicResource TextSecondaryBrush}" />
         <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,6,0,0">
-          <Button Content="{loc:Tr Dashboard_RunNow}" Classes="Primary" Command="{Binding RunNowCommand}" IsEnabled="{Binding !IsRunning}" />
-          <Button Content="{loc:Tr Dashboard_ReprocessErrors}" Classes="Secondary" Command="{Binding ReprocessErrorsCommand}" IsEnabled="{Binding !IsRunning}" />
+          <controls:LoadingButton Content="{loc:Tr Dashboard_RunNow}" Classes="Primary" Command="{Binding RunNowCommand}" IsBusy="{Binding IsRunning}" />
+          <controls:LoadingButton Content="{loc:Tr Dashboard_ReprocessErrors}" Classes="Secondary" Command="{Binding ReprocessErrorsCommand}" IsBusy="{Binding IsRunning}" />
         </StackPanel>
       </StackPanel>
     </Border>
