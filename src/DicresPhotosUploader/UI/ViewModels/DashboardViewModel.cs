@@ -188,6 +188,7 @@ public partial class DashboardViewModel : ObservableObject
         return (log, albumProgress);
     }
 
+    [RelayCommand]
     private void RefreshAlbums()
     {
         Albums.Clear();

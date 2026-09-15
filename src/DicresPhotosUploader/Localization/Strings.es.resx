@@ -160,6 +160,9 @@
   <data name="Dashboard_ShowOnlyErrorAlbums" xml:space="preserve">
     <value>Mostrar solo álbumes con errores</value>
   </data>
+  <data name="Dashboard_RefreshAlbums" xml:space="preserve">
+    <value>Refrescar álbumes</value>
+  </data>
   <data name="Dashboard_RunLog" xml:space="preserve">
     <value>Registro de ejecución</value>
   </data>

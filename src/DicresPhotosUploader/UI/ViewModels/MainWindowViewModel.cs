@@ -21,6 +21,8 @@ public partial class MainWindowViewModel : ObservableObject
         Schedule = new ScheduleViewModel(configStore, config);
         History = new HistoryViewModel(historyStore);
 
+        Config.RootFolderChanged += (_, _) => Dashboard.RefreshAlbumsCommand.Execute(null);
+
         // Tab order in MainWindow.axaml: 0 = Dashboard, 1 = Configuration, 2 = Schedule, 3 = History.
         SelectedTabIndex = Config.IsConfigurationComplete ? 0 : 1;
     }

@@ -20,8 +20,12 @@
 
     <Border Grid.Row="1" Grid.Column="0" Classes="Card" Margin="0,0,16,0">
       <DockPanel>
-        <TextBlock DockPanel.Dock="Top" Text="{loc:Tr Dashboard_ProgressByAlbum}" FontWeight="SemiBold"
-                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10" />
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+          <TextBlock Grid.Column="0" Text="{loc:Tr Dashboard_ProgressByAlbum}" FontWeight="SemiBold"
+                     Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
+          <Button Grid.Column="1" Content="{loc:Tr Dashboard_RefreshAlbums}" Classes="Secondary"
+                  Command="{Binding RefreshAlbumsCommand}" />
+        </Grid>
         <CheckBox DockPanel.Dock="Top" Content="{loc:Tr Dashboard_ShowOnlyErrorAlbums}"
                   IsChecked="{Binding ShowOnlyAlbumsWithErrors}" Margin="0,0,0,10" />
         <ScrollViewer>

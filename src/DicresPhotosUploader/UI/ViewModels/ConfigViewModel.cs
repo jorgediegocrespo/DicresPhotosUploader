@@ -62,6 +62,12 @@ public partial class ConfigViewModel : ObservableObject
     [ObservableProperty]
     private LanguageOption _selectedLanguage;
 
+    /// <summary>
+    /// Raised after the root folder is saved so other view models (e.g. the dashboard)
+    /// can refresh data that depends on it.
+    /// </summary>
+    public event EventHandler? RootFolderChanged;
+
     public ConfigViewModel(ConfigStore configStore, AppConfig config)
     {
         _configStore = configStore;
@@ -97,6 +103,8 @@ public partial class ConfigViewModel : ObservableObject
     [RelayCommand]
     private void Save()
     {
+        var rootFolderChanged = !string.Equals(_config.RootFolder, RootFolder, StringComparison.Ordinal);
+
         _config.RootFolder = RootFolder;
         _config.ErroredFolderPath = ErroredFolderPath;
         _config.BatchSize = BatchSize;
@@ -107,6 +115,11 @@ public partial class ConfigViewModel : ObservableObject
         _configStore.Save(_config);
         StatusMessage = Loc.Get("Config_StatusSaved");
         IsConfigurationComplete = ComputeIsConfigurationComplete();
+
+        if (rootFolderChanged)
+        {
+            RootFolderChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     [RelayCommand]

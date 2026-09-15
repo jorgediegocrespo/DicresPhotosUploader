@@ -160,6 +160,9 @@
   <data name="Dashboard_ShowOnlyErrorAlbums" xml:space="preserve">
     <value>Show only albums with errors</value>
   </data>
+  <data name="Dashboard_RefreshAlbums" xml:space="preserve">
+    <value>Refresh albums</value>
+  </data>
   <data name="Dashboard_RunLog" xml:space="preserve">
     <value>Run log</value>
   </data>
