@@ -78,13 +78,7 @@ public partial class ConfigViewModel : ObservableObject
         _isConfigurationComplete = ComputeIsConfigurationComplete();
     }
 
-    private bool ComputeIsConfigurationComplete() =>
-        !string.IsNullOrWhiteSpace(_config.RootFolder)
-        && Directory.Exists(_config.RootFolder)
-        && !string.IsNullOrWhiteSpace(_config.ErroredFolderPath)
-        && _config.AllowedExtensions.Length > 0
-        && Directory.Exists(_config.TokenStorePath)
-        && Directory.EnumerateFiles(_config.TokenStorePath).Any();
+    private bool ComputeIsConfigurationComplete() => ConfigReadiness.IsComplete(_config);
 
     partial void OnSelectedThemeChanged(ThemeOption value)
     {

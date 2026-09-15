@@ -58,6 +58,41 @@ public class ScheduleViewModelTests : IDisposable
     }
 
     [Fact]
+    public void RefreshOAuthStatus_TokenCreatedAfterConstruction_UpdatesIsOAuthReady()
+    {
+        var tokenStorePath = Path.Combine(_tempDir, "token_store");
+        var (store, config) = CreateStoreAndConfig(new AppConfig { TokenStorePath = tokenStorePath });
+        var vm = new ScheduleViewModel(store, config);
+        Assert.False(vm.IsOAuthReady);
+
+        Directory.CreateDirectory(tokenStorePath);
+        File.WriteAllText(Path.Combine(tokenStorePath, "token.json"), "{}");
+
+        vm.RefreshOAuthStatus();
+
+        Assert.True(vm.IsOAuthReady);
+    }
+
+    [Fact]
+    public void SaveAsync_TokenCreatedAfterConstruction_RefreshesOAuthStatusBeforeValidating()
+    {
+        var tokenStorePath = Path.Combine(_tempDir, "token_store");
+        var (store, config) = CreateStoreAndConfig(new AppConfig { TokenStorePath = tokenStorePath });
+        var vm = new ScheduleViewModel(store, config)
+        {
+            BackgroundScheduleEnabled = true
+        };
+        Assert.False(vm.IsOAuthReady);
+
+        Directory.CreateDirectory(tokenStorePath);
+        File.WriteAllText(Path.Combine(tokenStorePath, "token.json"), "{}");
+
+        vm.SaveCommand.Execute(null);
+
+        Assert.True(vm.IsOAuthReady);
+    }
+
+    [Fact]
     public void Constructor_ExistingScheduleEntries_SelectsMatchingDaysAndTime()
     {
         var (store, config) = CreateStoreAndConfig(new AppConfig
