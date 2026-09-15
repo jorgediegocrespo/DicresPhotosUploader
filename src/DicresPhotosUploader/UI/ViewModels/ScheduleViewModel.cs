@@ -43,7 +43,7 @@ public partial class ScheduleViewModel : ObservableObject
         _scheduler = OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() ? IBackgroundScheduler.Create() : null;
 
         BackgroundScheduleEnabled = config.BackgroundScheduleEnabled;
-        IsOAuthReady = Directory.Exists(config.TokenStorePath) && Directory.EnumerateFileSystemEntries(config.TokenStorePath).Any();
+        RefreshOAuthStatus();
 
         foreach (var entry in config.ScheduleEntries)
         {
@@ -62,6 +62,8 @@ public partial class ScheduleViewModel : ObservableObject
     [RelayCommand]
     private async Task SaveAsync()
     {
+        RefreshOAuthStatus();
+
         if (_scheduler is null)
         {
             StatusMessage = Loc.Get("Schedule_StatusOnlyWinMac");
@@ -106,6 +108,11 @@ public partial class ScheduleViewModel : ObservableObject
         {
             StatusMessage = Loc.Format("Schedule_StatusRegisterError", ex.Message);
         }
+    }
+
+    public void RefreshOAuthStatus()
+    {
+        IsOAuthReady = ConfigReadiness.HasGoogleAuthorization(_config);
     }
 
     private async Task RefreshStatusAsync()
